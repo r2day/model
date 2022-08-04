@@ -72,3 +72,10 @@ func (m Dishes) Delete(id int) Dishes {
 	DataHandler.Where("id = ?", id).Delete(&m)
 	return m
 }
+
+// GroupCategoryId 保存实例
+func (m Dishes) GroupCategoryId(categoryId string) []Dishes {
+	instance := make([]Dishes, 0)
+	DataHandler.Where("category_id = ?", categoryId).Find(&instance)
+	return instance
+}
