@@ -46,6 +46,12 @@ type Dishes struct {
 	DepId string `json:"dep_id"`
 	// 是否支持外卖
 	SupportTakeout string `json:"support_takeout"`
+	// 标签
+	Badge string `json:"badge"`
+	// 描述
+	Desc string `json:"desc"`
+	// 图片
+	Pic string `json:"pic"`
 }
 
 // Save 保存实例
