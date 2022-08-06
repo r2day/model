@@ -25,3 +25,14 @@ type StoreModel struct {
 	Phone    string `json:"phone"`
 	Pic      string `json:"pic"`
 }
+
+// Save 保存实例
+func (m StoreModel) Save() {
+	DataHandler.Create(&m)
+}
+
+func (m StoreModel) GetStore(merchantId string, storeId string) []StoreModel {
+	instance := make([]StoreModel, 0)
+	DataHandler.Where("merchant_id = ? and store_id = ?", merchantId, storeId).Find(&instance)
+	return instance
+}
