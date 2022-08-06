@@ -15,7 +15,7 @@ type CartModel struct {
 	CreatedAt time.Time
 	// UpdatedAt 修改时间
 	UpdatedAt time.Time
-	
+
 	UserId        int    `json:"user_id" gorm:"user_id"`
 	ProductId     int    `json:"product_id" gorm:"product_id" `
 	ProductName   string `json:"product_name" gorm:"product_name"`
@@ -25,4 +25,12 @@ type CartModel struct {
 	Pic           string `json:"pic" gorm:"pic"`
 	// 特性
 	Characteristic string `json:"characteristic" gorm:"characteristic"`
+}
+
+// All 保存实例
+func (m CartModel) All(merchantId string, storeId string, userId string) []CartModel {
+	instance := make([]CartModel, 0)
+	DataHandler.Where("merchant_id = ? and store_id = ? and user_id = ?", merchantId, storeId, userId).
+		Find(&instance)
+	return instance
 }
