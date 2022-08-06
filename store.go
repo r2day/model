@@ -31,8 +31,8 @@ func (m StoreModel) Save() {
 	DataHandler.Create(&m)
 }
 
-func (m StoreModel) GetStore(merchantId string, storeId string) []StoreModel {
+func (m StoreModel) GetStore(merchantId string) []StoreModel {
 	instance := make([]StoreModel, 0)
-	DataHandler.Where("merchant_id = ? and store_id = ?", merchantId, storeId).Find(&instance)
+	DataHandler.Where("merchant_id = ?", merchantId).Find(&instance)
 	return instance
 }
