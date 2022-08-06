@@ -10,6 +10,8 @@ type StoreModel struct {
 	UserId string `json:"user_id"`
 	// MerchantId 商户ID (例如: 黄李记作为一个商户存在)
 	MerchantId string `json:"merchant_id"`
+	// StoreId store id
+	StoreId string `json:"store_id"`
 	// Status 状态
 	Status string `gorm:"default:effected"`
 	// CreatedAt 创建时间
