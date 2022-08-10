@@ -104,7 +104,7 @@ func (m CartModel) GetCurrentCartInfo() (CartOutputModel, []*CartModel, error) {
 	// 查询当前购物车的状态
 	DataHandler.Debug().Table("cart_models").
 		Select("sum(product_number) as total_product_number, sum(total_price) as total_product_price").
-		Where("user_id = ?", m.UserId).Find(&cartOutputModel)
+		Where(cond).Find(&cartOutputModel)
 
 	DataHandler.Debug().Table("cart_models").
 		Select("user_id, product_id, product_name, pic, unit_price, product_number, characteristic, total_price").
