@@ -36,7 +36,7 @@ type CartModel struct {
 type CartOutputModel struct {
 	// gorm.Model
 	TotalProductNumber int `json:"total_product_number" gorm:"total_product_number"`
-	TotalProductPrice  int `json:"total_product_price" gorm:"total_product_price" `
+	TotalProductPrice  float32 `json:"total_product_price" gorm:"total_product_price" `
 }
 
 // Save 保存实例
