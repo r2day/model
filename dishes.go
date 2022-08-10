@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/r2day/base"
 	"time"
 )
 

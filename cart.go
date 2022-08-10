@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"time"
 
 	logger "github.com/r2day/base/log"
