@@ -25,4 +25,3 @@ type AddressModel struct {
 	Addr   string `json:"addr" gorm:"addr"`
 	Tag    string `json:"tag" gorm:"tag"`
 }
-
