@@ -117,7 +117,15 @@ func (m CartModel) MinusCart(productId int, userId int, price int) error {
 	const productNumber = 1 // 每次减1
 
 	// 查询条件
-	cond := map[string]interface{}{
+	condForDeleted := map[string]interface{}{
+		"merchant_id": m.MerchantId,
+		"store_id":    m.StoreId,
+		"user_id":     m.UserId,
+		"product_id":  m.ProductId,
+		"product_number": 1,
+	}
+
+	condForDecrement := map[string]interface{}{
 		"merchant_id": m.MerchantId,
 		"store_id":    m.StoreId,
 		"user_id":     m.UserId,
@@ -125,12 +133,12 @@ func (m CartModel) MinusCart(productId int, userId int, price int) error {
 	}
 	// 当product_number是1时，删除记录
 	DataHandler.Debug().Table("cart_models").
-		Where(cond).
+		Where(condForDeleted).
 		Delete(&CartModel{})
 
 	DataHandler.Debug().Table("cart_models").
-		Where("product_id = ? and user_id = ?", productId, userId).
-		UpdateColumn("total_price", gorm.Expr("total_price - ?", price)).
+		Where(condForDecrement).
+		UpdateColumn("total_price", gorm.Expr("total_price - ?", m.UnitPrice)).
 		UpdateColumn("product_number", gorm.Expr("product_number - ?", productNumber))
 	return nil
 }
