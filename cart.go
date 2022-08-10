@@ -113,7 +113,7 @@ func (m CartModel) GetCurrentCartInfo() (CartOutputModel, []*CartModel, error) {
 	return cartOutputModel, cartListOutputModel, nil
 }
 
-func (m CartModel) MinusCart(productId int, userId int, price int) error {
+func (m CartModel) MinusCart() error {
 	const productNumber = 1 // 每次减1
 
 	// 查询条件
