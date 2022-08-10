@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	logger "github.com/r2day/base/log"
 )
 
 // Dishes 菜单库
@@ -84,4 +86,26 @@ func (m Dishes) GroupCategoryId(categoryId string) []Dishes {
 	instance := make([]Dishes, 0)
 	DataHandler.Where("category_id = ?", categoryId).Find(&instance)
 	return instance
+}
+
+// Detail 菜品详情
+func (m Dishes) Detail (productId string) (*Dishes, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"merchant_id": m.MerchantId,
+		"item_id":  productId,
+	}
+
+	// var productInfoModel ProductInfoModel
+	err := DataHandler.Where(cond).
+	First(&m).Error
+	
+	if err != nil {
+		// 返回任何错误都会回滚事务
+		logger.Logger.WithField("m", m).
+			WithError(err)
+		return nil, err
+	}
+	return &m, nil
 }
