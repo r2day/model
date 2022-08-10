@@ -59,7 +59,7 @@ func (m CartModel) Save() error {
 		if err != nil {
 			logger.Logger.WithField("cond", cond).
 				WithError(err)
-			return err
+			// return err
 		}
 
 		// 还不存在则创建一个
