@@ -7,6 +7,49 @@ import (
 	"gorm.io/gorm"
 )
 
+// Item mysql ?
+type Item struct {
+	// Id 自增唯一id
+	Id uint `json:"id" gorm:"unique"`
+	// Status 状态
+	Status string `gorm:"default:effected"`
+	// CreatedAt 创建时间
+	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
+	// UpdatedAt 修改时间
+	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
+
+	Name     string  `json:"name" gorm:"name"`
+	Price    float64 `json:"price" gorm:"price" `
+	Currency string  `json:"currency" gorm:"currency"`
+	Category string  `json:"category" gorm:"category"`
+	Pic      string  `json:"pic" gorm:"pic"`
+	Desc     string  `json:"desc" gorm:"desc"`
+	Sales    int64   `json:"sales" gorm:"sales"`
+}
+
+// CartItem ES ?
+type CartItem struct {
+	// Id 自增唯一id
+	Id uint `json:"id" gorm:"unique"`
+	// Status 状态
+	Status string `gorm:"default:effected"`
+	// CreatedAt 创建时间
+	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
+	// UpdatedAt 修改时间
+	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
+
+	CartId   string  `json:"cart_id" gorm:"cart_id"`
+	Count    int     `json:"count" gorm:"count"`
+	Amount   float64 `json:"amount" gorm:"amount" `
+	Currency string  `json:"currency" gorm:"currency"`
+
+	ItemInfo Item `json:"item_info" gorm:"item_info"`
+}
+
+func (m *CartItem) GetAmount() float64 {
+	return float64(m.Count) * m.ItemInfo.Price
+}
+
 type CartModel struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
@@ -21,16 +64,12 @@ type CartModel struct {
 	// UpdatedAt 修改时间
 	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
-	StoreId       string  `json:"store_id" gorm:"store_id"`
-	UserId        string  `json:"user_id" gorm:"user_id"`
-	ProductId     string  `json:"product_id" gorm:"product_id" `
-	ProductName   string  `json:"product_name" gorm:"product_name"`
-	ProductNumber int     `json:"product_number" gorm:"product_number"`
-	TotalPrice    float32 `json:"total_price" gorm:"total_price"`
-	UnitPrice     float32 `json:"unit_price" gorm:"unit_price"`
-	Pic           string  `json:"pic" gorm:"pic"`
-	// 特性
-	Characteristic string `json:"characteristic" gorm:"characteristic"`
+	StoreId string `json:"store_id" gorm:"store_id"`
+	UserId  string `json:"user_id" gorm:"user_id"`
+
+	TotalAmount float64     `json:"total_amount" gorm:"total_amount"`
+	TotalCount  float64     `json:"total_count" gorm:"total_count"`
+	CartItems   []*CartItem `json:"cart_items" gorm:"cart_items"`
 }
 
 type CartOutputModel struct {
@@ -50,7 +89,6 @@ func (m CartModel) Save() error {
 		cond := map[string]interface{}{
 			"merchant_id": m.MerchantId,
 			"store_id":    m.StoreId,
-			"product_id":  m.ProductId,
 			"user_id":     m.UserId,
 		}
 
@@ -63,7 +101,7 @@ func (m CartModel) Save() error {
 		}
 
 		// 还不存在则创建一个
-		if cartInfoModel.ProductNumber == 0 {
+		if cartInfoModel.TotalCount == 0 {
 			logger.Logger.Info("ready to create a new object")
 			// 单个商品首次添加
 			if err := tx.Create(&m).Error; err != nil {
@@ -79,8 +117,8 @@ func (m CartModel) Save() error {
 			logger.Logger.Info("ready to increment a cart number")
 			tx.Model(&CartModel{}).
 				Where(cond).
-				UpdateColumn("total_price", gorm.Expr("total_price + ?", m.TotalPrice)).
-				UpdateColumn("product_number", gorm.Expr("product_number + ?", m.ProductNumber))
+				UpdateColumn("total_amount", gorm.Expr("total_amount + ?", m.TotalAmount)).
+				UpdateColumn("total_count", gorm.Expr("total_count + ?", m.TotalCount))
 			logger.Logger.Info("increment a cart number successful")
 		}
 		return nil
@@ -90,7 +128,7 @@ func (m CartModel) Save() error {
 
 }
 
-func (m CartModel) GetCurrentCartInfo() (CartOutputModel, []*CartModel, error) {
+func (m CartModel) GetCurrentCartInfo(item Item) (CartOutputModel, []*CartModel, error) {
 	var cartOutputModel CartOutputModel
 	cartListOutputModel := make([]*CartModel, 0)
 
@@ -118,18 +156,17 @@ func (m CartModel) MinusCart() error {
 
 	// 查询条件
 	condForDeleted := map[string]interface{}{
-		"merchant_id":    m.MerchantId,
-		"store_id":       m.StoreId,
-		"user_id":        m.UserId,
-		"product_id":     m.ProductId,
-		"product_number": 1,
+		"merchant_id": m.MerchantId,
+		"store_id":    m.StoreId,
+		"user_id":     m.UserId,
+		// "product_number": 1,
 	}
 
 	condForDecrement := map[string]interface{}{
 		"merchant_id": m.MerchantId,
 		"store_id":    m.StoreId,
 		"user_id":     m.UserId,
-		"product_id":  m.ProductId,
+		// "product_id":  m.ProductId,
 	}
 	// 当product_number是1时，删除记录
 	DataHandler.Debug().Table("cart_models").
@@ -138,7 +175,7 @@ func (m CartModel) MinusCart() error {
 
 	DataHandler.Debug().Table("cart_models").
 		Where(condForDecrement).
-		UpdateColumn("total_price", gorm.Expr("total_price - ?", m.UnitPrice)).
+		// UpdateColumn("total_price", gorm.Expr("total_price - ?", m.UnitPrice)).
 		UpdateColumn("product_number", gorm.Expr("product_number - ?", productNumber))
 	return nil
 }
