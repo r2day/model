@@ -35,7 +35,7 @@ type CartModel struct {
 
 type CartOutputModel struct {
 	// gorm.Model
-	TotalProductNumber int `json:"total_product_number" gorm:"total_product_number"`
+	TotalProductNumber int     `json:"total_product_number" gorm:"total_product_number"`
 	TotalProductPrice  float32 `json:"total_product_price" gorm:"total_product_price" `
 }
 
@@ -107,7 +107,7 @@ func (m CartModel) GetCurrentCartInfo() (CartOutputModel, []*CartModel, error) {
 		Where(cond).Find(&cartOutputModel)
 
 	DataHandler.Debug().Table("cart_models").
-		Select("user_id, product_id, product_name, pic, unit_price, product_number, characteristic, total_price").
+		Select("user_id, product_id, product_name, pic, unit_price, product_number, characteristic, total_price, store_id, merchant_id, created_at, updated_at, id").
 		Where(cond).Find(&cartListOutputModel)
 
 	return cartOutputModel, cartListOutputModel, nil
@@ -118,10 +118,10 @@ func (m CartModel) MinusCart() error {
 
 	// 查询条件
 	condForDeleted := map[string]interface{}{
-		"merchant_id": m.MerchantId,
-		"store_id":    m.StoreId,
-		"user_id":     m.UserId,
-		"product_id":  m.ProductId,
+		"merchant_id":    m.MerchantId,
+		"store_id":       m.StoreId,
+		"user_id":        m.UserId,
+		"product_id":     m.ProductId,
 		"product_number": 1,
 	}
 
