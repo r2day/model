@@ -94,6 +94,7 @@ func (m Order) Save() error{
 					ProductName: i.ProductName,
 					TotalPrice: i.TotalPrice,
 				}
+				logger.Logger.Info("TODO send order to mq -->", o)
 
 				tx.Model(&CartModel{}).
 					Where(cond).

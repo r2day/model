@@ -17,9 +17,9 @@ type CartModel struct {
 	// Status 状态
 	Status string `gorm:"default:effected"`
 	// CreatedAt 创建时间
-	CreatedAt time.Time
+	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
 	// UpdatedAt 修改时间
-	UpdatedAt time.Time
+	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
 	StoreId       string  `json:"store_id" gorm:"store_id"`
 	UserId        string  `json:"user_id" gorm:"user_id"`
