@@ -2,9 +2,6 @@ package model
 
 import (
 	"time"
-
-	logger "github.com/r2day/base/log"
-	"gorm.io/gorm"
 )
 
 type Order struct {
