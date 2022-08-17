@@ -63,8 +63,10 @@ type CartItem struct {
 	// UpdatedAt 修改时间
 	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
-	// 购物车id
+	// 购物车id 加索引?????
 	CartId string `json:"cart_id" gorm:"cart_id"`
+	// Itemid
+	ItemId string `json:"item_id" gorm:"item_id"`
 	// 该商品数量
 	Count int `json:"count" gorm:"count"`
 	// 该商品总金额
@@ -75,7 +77,7 @@ type CartItem struct {
 	ItemInfo Item `json:"item_info" gorm:"item_info"`
 }
 
-func (m *CartItem) GetAmount() float64 {
+func (m *CartItem) CalculateAmount() float64 {
 	return float64(m.Count) * m.ItemInfo.Price
 }
 
@@ -102,10 +104,12 @@ type Cart struct {
 	StoreId string `json:"store_id" gorm:"store_id"`
 	// 用户id
 	UserId string `json:"user_id" gorm:"user_id"`
+	// cart id
+	CartId string `json:"cart_id" gorm:"cart_id"`
 	// 商品总金额
 	TotalAmount float64 `json:"total_amount" gorm:"total_amount"`
 	// 商品总数
-	TotalCount float64 `json:"total_count" gorm:"total_count"`
+	TotalCount int `json:"total_count" gorm:"total_count"`
 	// 购物项
 	CartItems []*CartItem `json:"cart_items" gorm:"cart_items"`
 }
@@ -115,49 +119,91 @@ type CartOutputModel struct {
 	TotalProductPrice  float32 `json:"total_product_price" gorm:"total_product_price" `
 }
 
-// Save 保存实例
-func (m Cart) Save() error {
+// 如果不存在cart则创建一个，否则直接返回当前的cart
+func (m Cart) Init() Cart {
+	// 购物车初始化
+	// 查询cartItem条件
+	cond := map[string]interface{}{
+		"merchant_id":     m.MerchantId,
+		"store_id":     m.StoreId,
+		"user_id":     m.UserId,
+	}
+	// 获取当前购物车列表
+	err := tx.Model(&Cart{}).Where(cond).First(&m).Error
+	if err != nil {
+		logger.Logger.WithField("cond", cond).
+			WithError(err)
+		return err
+	}
+	// 确认是否已经查询到有效的购物车
+	// 如果不存在，则创建一个
+	if m.Status != "effected" {
+			DataHandler.Create(&m)
+	}
+	return m
+}
 
-	var cartInfoModel CartModel
+// Save 购物车
+// 单例模式
+func (m Cart) Save(item Item) error {
+
+	var cartItem CartItem
 
 	err := DataHandler.Transaction(func(tx *gorm.DB) error {
 
-		// 查询条件
+		// 查询cartItem条件
 		cond := map[string]interface{}{
-			"merchant_id": m.MerchantId,
-			"store_id":    m.StoreId,
-			"user_id":     m.UserId,
+			"item_id":     item.ItemId,
 		}
 
 		// 获取当前购物车列表
-		err := tx.Model(&CartModel{}).Where(cond).First(&cartInfoModel).Error
+		err := tx.Model(&CartItem{}).Where(cond).First(&cartItem).Error
 		if err != nil {
 			logger.Logger.WithField("cond", cond).
 				WithError(err)
-			// return err
+			return err
 		}
 
-		// 还不存在则创建一个
-		if cartInfoModel.TotalCount == 0 {
-			logger.Logger.Info("ready to create a new object")
+		// 还不存在则创建一个cartItem
+		if cartItem.TotalCount == 0 {
+			logger.Logger.Info("ready to create a new cartItem")
+
+			// 赋值商品详情信息
+			cartItem.CartId = m.CartId
+			cartItem.ItemId = item.ItemId
+			cartItem.ItemInfo = item // 以后不再需要重复赋值
+			cartItem.Count = 1 // 首次添加 (往后直接累加)
+			cartItem.Amount = cartItem.CalculateAmount()
+			cartItem.Currency = item.Currency
+
 			// 单个商品首次添加
-			if err := tx.Create(&m).Error; err != nil {
+			if err := tx.Create(&cartItem).Error; err != nil {
 				// 返回任何错误都会回滚事务
-				logger.Logger.WithField("m", m).
+				logger.Logger.WithField("item", item).WithField("cartItem", cartItem)
 					WithError(err)
 				return err
 			}
 			// 返回 nil 提交事务
-			logger.Logger.Info("create a new object successful")
+			logger.Logger.Info("create a new cartItem successful")
+			// TODO send to MQ / ES save it
+
 			return nil
 		} else {
 			logger.Logger.Info("ready to increment a cart number")
-			tx.Model(&CartModel{}).
+			// 更新cartItem
+			tx.Model(&CartItem{}).
 				Where(cond).
-				UpdateColumn("total_amount", gorm.Expr("total_amount + ?", m.TotalAmount)).
-				UpdateColumn("total_count", gorm.Expr("total_count + ?", m.TotalCount))
+				UpdateColumn("count", gorm.Expr("count + ?", 1)).
+				UpdateColumn("amount", gorm.Expr("amount + ?", item.Price))
+
 			logger.Logger.Info("increment a cart number successful")
 		}
+
+		// 更新购物车
+		tx.Model(&Cart{}).
+			Where(cartCond).
+			UpdateColumn("total_amount", gorm.Expr("total_amount + ?", item.Price)).
+			UpdateColumn("total_count", gorm.Expr("total_count + ?", 1)) // 每次增加一个？
 		return nil
 	})
 
@@ -165,9 +211,9 @@ func (m Cart) Save() error {
 
 }
 
-func (m Cart) GetCurrentCartInfo(item Item) (CartOutputModel, []*CartModel, error) {
-	var cartOutputModel CartOutputModel
-	cartListOutputModel := make([]*CartModel, 0)
+func (m Cart) GetCartInfo() (Cart, CartItem, error) {
+	var cart Cart
+	cartItems := make([]*CartItem, 0)
 
 	// 查询条件
 	cond := map[string]interface{}{
@@ -177,15 +223,27 @@ func (m Cart) GetCurrentCartInfo(item Item) (CartOutputModel, []*CartModel, erro
 	}
 
 	// 查询当前购物车的状态
-	DataHandler.Debug().Table("cart_models").
-		Select("sum(product_number) as total_product_number, sum(total_price) as total_product_price").
-		Where(cond).Find(&cartOutputModel)
+	DataHandler.Debug().Table("cart").
+		Select("total_amount, total_count, cart_id").
+		Where(cond).First(&cart)
 
-	DataHandler.Debug().Table("cart_models").
-		Select("user_id, product_id, product_name, pic, unit_price, product_number, characteristic, total_price, store_id, merchant_id, created_at, updated_at, id").
-		Where(cond).Find(&cartListOutputModel)
 
-	return cartOutputModel, cartListOutputModel, nil
+		cond2 := map[string]interface{}{
+			"cart_id": cart.CartId,
+		}
+
+	DataHandler.Debug().Table("cart_item").
+		Select("count, amount, item_id").
+		Where(cond2).Find(&cartItems)
+
+	// 循环查询缓存获得item 详细信息
+	// ....
+	for _, i := range cartItems {
+		// query from cache
+		i.ItemInfo = nil //....
+	}
+
+	return cart, cartItems, nil
 }
 
 func (m Cart) MinusCart() error {
