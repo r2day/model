@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/r2day/base/util"
 	logger "github.com/r2day/base/log"
 	"gorm.io/gorm"
 )
@@ -65,7 +66,9 @@ type CartItem struct {
 
 	// 购物车id 加索引?????
 	CartId string `json:"cart_id" gorm:"cart_id"`
-	// Itemid
+	// CartItemId
+	CartItemId string `json:"cart_item_id" gorm:"cart_item_id"`
+	// Itemid TODO 索引
 	ItemId string `json:"item_id" gorm:"item_id"`
 	// 该商品数量
 	Count int `json:"count" gorm:"count"`
@@ -159,7 +162,7 @@ func (m Cart) Save(item Item) error {
 		// 获取当前购物车列表
 		err := tx.Model(&CartItem{}).Where(cond).First(&cartItem).Error
 		if err != nil {
-			logger.Logger.WithField("cond", cond).
+			logger.Logger.Info("query cartItem").WithField("cond", cond).
 				WithError(err)
 			return err
 		}
@@ -169,6 +172,7 @@ func (m Cart) Save(item Item) error {
 			logger.Logger.Info("ready to create a new cartItem")
 
 			// 赋值商品详情信息
+			cartItem.CartItemId = util.GetCartItemId()
 			cartItem.CartId = m.CartId
 			cartItem.ItemId = item.ItemId
 			cartItem.ItemInfo = item // 以后不再需要重复赋值
@@ -211,6 +215,7 @@ func (m Cart) Save(item Item) error {
 
 }
 
+// GetCartInfo 获取购物车信息
 func (m Cart) GetCartInfo() (Cart, CartItem, error) {
 	var cart Cart
 	cartItems := make([]*CartItem, 0)
@@ -246,44 +251,53 @@ func (m Cart) GetCartInfo() (Cart, CartItem, error) {
 	return cart, cartItems, nil
 }
 
-func (m Cart) MinusCart() error {
+// MinusCart 从购物车中移除商品
+func (m Cart) MinusCart(item Item) error {
 	const productNumber = 1 // 每次减1
 
+
+
 	// 查询条件
-	condForDeleted := map[string]interface{}{
-		"merchant_id": m.MerchantId,
-		"store_id":    m.StoreId,
-		"user_id":     m.UserId,
-		// "product_number": 1,
+	cartItemCond := map[string]interface{}{
+		"item_id":     item.item_id,
+		"count":     1, // 如果当前是1则直接移除
 	}
 
-	condForDecrement := map[string]interface{}{
+	// 查询条件
+	cartItemCond2 := map[string]interface{}{
+		"item_id":     item.item_id,
+	}
+
+	cartCond := map[string]interface{}{
 		"merchant_id": m.MerchantId,
 		"store_id":    m.StoreId,
 		"user_id":     m.UserId,
-		// "product_id":  m.ProductId,
 	}
 	// 当product_number是1时，删除记录
-	DataHandler.Debug().Table("cart").
-		Where(condForDeleted).
-		Delete(&CartModel{})
+	DataHandler.Debug().Table("cart_item").
+		Where(cartItemCond).
+		Delete(&CartItem{})
 
+	// 如果不为最后一个则，直接减1
+	DataHandler.Debug().Table("cart_item").
+		Where(cartItemCond2).
+		UpdateColumn("amount", gorm.Expr("amount - ?", item.Price)).
+		UpdateColumn("count", gorm.Expr("count - ?", 1))
+
+	// 购物车总体减一次
 	DataHandler.Debug().Table("cart").
-		Where(condForDecrement).
-		// UpdateColumn("total_price", gorm.Expr("total_price - ?", m.UnitPrice)).
-		UpdateColumn("product_number", gorm.Expr("product_number - ?", productNumber))
+		Where(cartCond).
+		UpdateColumn("total_amount", gorm.Expr("total_amount - ?", item.Price)).
+		UpdateColumn("total_count", gorm.Expr("total_count - ?", 1))
 	return nil
 }
 
-// All 保存实例
-func (m CartModel) All(merchantId string, storeId string, userId string) []CartModel {
-	// 查询条件
+// All 管理员查看当前所有人的购物车
+func (m Cart) All() []Cart {
 	cond := map[string]interface{}{
 		"merchant_id": m.MerchantId,
-		"store_id":    m.StoreId,
-		"user_id":     m.UserId,
 	}
-	instance := make([]CartModel, 0)
+	instance := make([]Cart, 0)
 	DataHandler.Where(cond).
 		Find(&instance)
 	return instance
