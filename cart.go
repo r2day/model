@@ -132,7 +132,7 @@ func (m Cart) Init() Cart {
 		"user_id":     m.UserId,
 	}
 	// 获取当前购物车列表
-	err := tx.Model(&Cart{}).Where(cond).First(&m).Error
+	err := DataHandler.Model(&Cart{}).Where(cond).First(&m).Error
 	if err != nil {
 		logger.Logger.WithField("cond", cond).
 			WithError(err)
@@ -152,6 +152,12 @@ func (m Cart) Save(item Item) error {
 
 	var cartItem CartItem
 
+	// 查询条件
+	cartCond := map[string]interface{}{
+		"merchant_id": m.MerchantId,
+		"store_id":    m.StoreId,
+		"user_id":     m.UserId,
+	}
 	err := DataHandler.Transaction(func(tx *gorm.DB) error {
 
 		// 查询cartItem条件
@@ -162,13 +168,12 @@ func (m Cart) Save(item Item) error {
 		// 获取当前购物车列表
 		err := tx.Model(&CartItem{}).Where(cond).First(&cartItem).Error
 		if err != nil {
-			logger.Logger.Info("query cartItem").WithField("cond", cond).
-				WithError(err)
+			logger.Logger.WithField("cond", cond).WithError(err)
 			return err
 		}
 
 		// 还不存在则创建一个cartItem
-		if cartItem.TotalCount == 0 {
+		if cartItem.Count == 0 {
 			logger.Logger.Info("ready to create a new cartItem")
 
 			// 赋值商品详情信息
@@ -183,8 +188,7 @@ func (m Cart) Save(item Item) error {
 			// 单个商品首次添加
 			if err := tx.Create(&cartItem).Error; err != nil {
 				// 返回任何错误都会回滚事务
-				logger.Logger.WithField("item", item).WithField("cartItem", cartItem)
-					WithError(err)
+				logger.Logger.WithField("item", item).WithField("cartItem", cartItem).WithError(err)
 				return err
 			}
 			// 返回 nil 提交事务
@@ -216,7 +220,7 @@ func (m Cart) Save(item Item) error {
 }
 
 // GetCartInfo 获取购物车信息
-func (m Cart) GetCartInfo() (Cart, CartItem, error) {
+func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 	var cart Cart
 	cartItems := make([]*CartItem, 0)
 
@@ -243,10 +247,10 @@ func (m Cart) GetCartInfo() (Cart, CartItem, error) {
 
 	// 循环查询缓存获得item 详细信息
 	// ....
-	for _, i := range cartItems {
-		// query from cache
-		i.ItemInfo = nil //....
-	}
+	// for _, i := range cartItems {
+	// 	// query from cache
+	// 	i.ItemInfo = nil //....
+	// }
 
 	return cart, cartItems, nil
 }
@@ -259,13 +263,13 @@ func (m Cart) MinusCart(item Item) error {
 
 	// 查询条件
 	cartItemCond := map[string]interface{}{
-		"item_id":     item.item_id,
+		"item_id":     item.ItemId,
 		"count":     1, // 如果当前是1则直接移除
 	}
 
 	// 查询条件
 	cartItemCond2 := map[string]interface{}{
-		"item_id":     item.item_id,
+		"item_id":     item.ItemId,
 	}
 
 	cartCond := map[string]interface{}{

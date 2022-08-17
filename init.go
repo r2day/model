@@ -43,7 +43,11 @@ func InitDataBase(dsn string) error {
 	// 账号
 	DataHandler.AutoMigrate(&AccountInfo{})
 	// 账号
-	DataHandler.AutoMigrate(&CartModel{})
+	DataHandler.AutoMigrate(&Cart{})
+	// 账号
+	DataHandler.AutoMigrate(&CartItem{})
+	// 账号
+	DataHandler.AutoMigrate(&Item{})
 	// 账号
 	DataHandler.AutoMigrate(&AddressModel{})
 	return nil
