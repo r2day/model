@@ -47,7 +47,6 @@ type Item struct {
 	SalesInfo Sales `json:"sales_info" gorm:"sales_info"`
 }
 
-
 // CartItem 购物车物品
 // 存储: es
 // 写入: 客户
