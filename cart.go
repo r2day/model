@@ -136,7 +136,7 @@ func (m Cart) Init() Cart {
 	if err != nil {
 		logger.Logger.WithField("cond", cond).
 			WithError(err)
-		return err
+		return m
 	}
 	// 确认是否已经查询到有效的购物车
 	// 如果不存在，则创建一个
