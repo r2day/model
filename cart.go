@@ -141,7 +141,9 @@ func (m Cart) Init() Cart {
 	// 确认是否已经查询到有效的购物车
 	// 如果不存在，则创建一个
 	if m.Status != "effected" {
-			DataHandler.Create(&m)
+		m.CartId = util.GetCartId()
+		DataHandler.Create(&m)
+		return m
 	}
 	return m
 }
