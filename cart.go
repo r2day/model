@@ -169,7 +169,7 @@ func (m Cart) Save(item Item) error {
 		err := tx.Model(&CartItem{}).Where(cond).First(&cartItem).Error
 		if err != nil {
 			logger.Logger.WithField("cond", cond).WithError(err)
-			return err
+			// return err (if not record is ok, we create one, don't return it )
 		}
 
 		// 还不存在则创建一个cartItem
