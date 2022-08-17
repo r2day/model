@@ -77,11 +77,11 @@ type CartItem struct {
 	// 币种
 	Currency string `json:"currency" gorm:"currency"`
 	// 商品详情信息
-	ItemInfo Item `json:"item_info" gorm:"item_info"`
+	Item Item `json:"item" gorm:"item"`
 }
 
 func (m *CartItem) CalculateAmount() float64 {
-	return float64(m.Count) * m.ItemInfo.Price
+	return float64(m.Count) * m.Item.Price
 }
 
 // Cart 购物车
@@ -180,7 +180,7 @@ func (m Cart) Save(item Item) error {
 			cartItem.CartItemId = util.GetCartItemId()
 			cartItem.CartId = m.CartId
 			cartItem.ItemId = item.ItemId
-			cartItem.ItemInfo = item // 以后不再需要重复赋值
+			cartItem.Item = item // 以后不再需要重复赋值
 			cartItem.Count = 1 // 首次添加 (往后直接累加)
 			cartItem.Amount = cartItem.CalculateAmount()
 			cartItem.Currency = item.Currency
@@ -249,7 +249,7 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 	// ....
 	// for _, i := range cartItems {
 	// 	// query from cache
-	// 	i.ItemInfo = nil //....
+	// 	i.Item = nil //....
 	// }
 
 	return cart, cartItems, nil
