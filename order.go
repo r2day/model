@@ -34,26 +34,25 @@ type Order struct {
 	// 订单信息
 
 	// 下单时间
-	OrderTime string  `json:"order_time" gorm:"order_time"`
+	OrderTime string `json:"order_time" gorm:"order_time"`
 	// 下单门店
-	StoreName       string  `json:"store_name" gorm:"store_name"`
+	StoreName string `json:"store_name" gorm:"store_name"`
 	// 订单号
-	OrderId        string  `json:"order_id" gorm:"order_id"`
+	OrderId string `json:"order_id" gorm:"order_id"`
 	// 收货地址
-	Address        string  `json:"address" gorm:"address"`
+	Address string `json:"address" gorm:"address"`
 	// 取单号 (根据门店每天自动生成)
-	Seq        string  `json:"seq" gorm:"seq"`
+	Seq string `json:"seq" gorm:"seq"`
 	// 就餐方式 (堂食、外卖)
-	WayOfEating string  `json:"way_of_eating" gorm:"way_of_eating"`
+	WayOfEating string `json:"way_of_eating" gorm:"way_of_eating"`
 	// 取餐时间
-	PickUpTime string  `json:"pick_up_time" gorm:"pick_up_time"`
+	PickUpTime string `json:"pick_up_time" gorm:"pick_up_time"`
 	// 备注
-	Remark string  `json:"remark" gorm:"remark"`
+	Remark string `json:"remark" gorm:"remark"`
 }
 
-
 // Save 保存实例
-func (m Order) Save() error{
+func (m Order) Save() error {
 	// 查询购物车
 	goodsInCart := make([]CartModel, 0)
 
@@ -83,16 +82,16 @@ func (m Order) Save() error{
 			for _, i := range goodsInCart {
 				logger.Logger.Info("ready to place")
 				// 从仓库中扣除
-				// 
+				//
 				o := Order{
-					AdminId: i.AdminId,
-					MerchantId: i.MerchantId,
-					Status: "place",
-					StoreId: i.StoreId,
-					UserId: i.UserId,
-					ProductId: i.UserId,
+					AdminId:     i.AdminId,
+					MerchantId:  i.MerchantId,
+					Status:      "place",
+					StoreId:     i.StoreId,
+					UserId:      i.UserId,
+					ProductId:   i.UserId,
 					ProductName: i.ProductName,
-					TotalPrice: i.TotalPrice,
+					TotalPrice:  i.TotalPrice,
 				}
 				logger.Logger.Info("TODO send order to mq -->", o)
 

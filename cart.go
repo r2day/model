@@ -7,7 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// Item mysql ?
+// Item 物品
+// 存储: mysql
+// 写入: 管理员
+// 读: 客户/管理员
+// 高频: 读
 type Item struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
@@ -19,29 +23,37 @@ type Item struct {
 	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
 	// Name 名称
-	Name     string  `json:"name" gorm:"name"`
+	Name string `json:"name" gorm:"name"`
 	// ItemId 商品编号
-	ItemId     string  `json:"item_id" gorm:"item_id"`
-	// Alias 别名
-	Alias     string  `json:"alias" gorm:"alias"`
+	ItemId string `json:"item_id" gorm:"item_id"`
 	// Price 价格
-	Price    float64 `json:"price" gorm:"price"`
+	Price float64 `json:"price" gorm:"price"`
 	// Currency 币种
-	Currency string  `json:"currency" gorm:"currency"`
+	Currency string `json:"currency" gorm:"currency"`
+
+	// Alias 别名
+	Alias string `json:"alias" gorm:"alias"`
+	// Badge 徽章 (新品、微辣、..)
+	Badge string `json:"badge" gorm:"badge"`
 	// Category 分类
-	Category string  `json:"category" gorm:"category"`
+	Category string `json:"category" gorm:"category"`
 	// Pic 图片
-	Pic      string  `json:"pic" gorm:"pic"`
+	Pic string `json:"pic" gorm:"pic"`
 	// Urls 更多信息
-	Urls string  `json:"urls" gorm:"urls"`
+	Urls string `json:"urls" gorm:"urls"`
 	// Desc 描述
-	Desc     string  `json:"desc" gorm:"desc"`
+	Desc string `json:"desc" gorm:"desc"`
 	// Sales 销量信息 通过查询Sales.GetSales(itemId)
-	SalesInfo Sales   `json:"sales_info" gorm:"sales_info"`
+	SalesInfo Sales `json:"sales_info" gorm:"sales_info"`
 }
 
-// CartItem ES
-// 存储与es中，并且可以分析商品在购物车中的组合规律
+
+// CartItem 购物车物品
+// 存储: es
+// 写入: 客户
+// 读: 客户/管理员
+// 高频: 读
+// 说明: 可以分析商品在购物车中的组合规律
 type CartItem struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
@@ -53,13 +65,13 @@ type CartItem struct {
 	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
 	// 购物车id
-	CartId   string  `json:"cart_id" gorm:"cart_id"`
+	CartId string `json:"cart_id" gorm:"cart_id"`
 	// 该商品数量
-	Count    int     `json:"count" gorm:"count"`
+	Count int `json:"count" gorm:"count"`
 	// 该商品总金额
-	Amount   float64 `json:"amount" gorm:"amount" `
+	Amount float64 `json:"amount" gorm:"amount" `
 	// 币种
-	Currency string  `json:"currency" gorm:"currency"`
+	Currency string `json:"currency" gorm:"currency"`
 	// 商品详情信息
 	ItemInfo Item `json:"item_info" gorm:"item_info"`
 }
@@ -69,6 +81,10 @@ func (m *CartItem) GetAmount() float64 {
 }
 
 // Cart 购物车
+// 存储: mysql
+// 写入: 客户
+// 读: 客户/管理员
+// 高频: 读
 type Cart struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
@@ -86,17 +102,16 @@ type Cart struct {
 	// 店铺id
 	StoreId string `json:"store_id" gorm:"store_id"`
 	// 用户id
-	UserId  string `json:"user_id" gorm:"user_id"`
+	UserId string `json:"user_id" gorm:"user_id"`
 	// 商品总金额
-	TotalAmount float64     `json:"total_amount" gorm:"total_amount"`
+	TotalAmount float64 `json:"total_amount" gorm:"total_amount"`
 	// 商品总数
-	TotalCount  float64     `json:"total_count" gorm:"total_count"`
+	TotalCount float64 `json:"total_count" gorm:"total_count"`
 	// 购物项
-	CartItems   []*CartItem `json:"cart_items" gorm:"cart_items"`
+	CartItems []*CartItem `json:"cart_items" gorm:"cart_items"`
 }
 
 type CartOutputModel struct {
-	// gorm.Model
 	TotalProductNumber int     `json:"total_product_number" gorm:"total_product_number"`
 	TotalProductPrice  float32 `json:"total_product_price" gorm:"total_product_price" `
 }

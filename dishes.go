@@ -89,18 +89,18 @@ func (m Dishes) GroupCategoryId(categoryId string) []Dishes {
 }
 
 // Detail 菜品详情
-func (m Dishes) Detail (productId string) (*Dishes, error) {
+func (m Dishes) Detail(productId string) (*Dishes, error) {
 
 	// 查询条件
 	cond := map[string]interface{}{
 		"merchant_id": m.MerchantId,
-		"item_id":  productId,
+		"item_id":     productId,
 	}
 
 	// var productInfoModel ProductInfoModel
 	err := DataHandler.Where(cond).
-	First(&m).Error
-	
+		First(&m).Error
+
 	if err != nil {
 		// 返回任何错误都会回滚事务
 		logger.Logger.WithField("m", m).

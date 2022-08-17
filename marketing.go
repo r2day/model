@@ -18,10 +18,10 @@ type Sales struct {
 	// UpdatedAt 修改时间
 	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 
-  // Id 自增唯一id
-  ItemId string `json:"item_id" gorm:"item_id"`
-  // 总销量
-  TotalSales int64 `json:"total_sales" gorm:"total_sales"`
-  // 总销量
-  // TotalSales int64 `json:"total_sales" gorm:"total_sales"`
+	// Id 自增唯一id
+	ItemId string `json:"item_id" gorm:"item_id"`
+	// 总销量
+	TotalSales int64 `json:"total_sales" gorm:"total_sales"`
+	// 总销量
+	// TotalSales int64 `json:"total_sales" gorm:"total_sales"`
 }
