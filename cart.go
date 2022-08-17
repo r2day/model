@@ -136,15 +136,17 @@ func (m Cart) Init() Cart {
 	if err != nil {
 		logger.Logger.WithField("cond", cond).
 			WithError(err)
-		return m
-	}
-	// 确认是否已经查询到有效的购物车
-	// 如果不存在，则创建一个
-	if m.Status != "effected" {
 		m.CartId = util.GetCartId()
 		DataHandler.Create(&m)
 		return m
 	}
+	// 确认是否已经查询到有效的购物车
+	// 如果不存在，则创建一个
+	// if m.Status != "effected" {
+	// 	m.CartId = util.GetCartId()
+	// 	DataHandler.Create(&m)
+	// 	return m
+	// }
 	return m
 }
 
