@@ -237,7 +237,7 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 
 	// 查询当前购物车的状态
 	DataHandler.Debug().Table("carts").
-		Select("total_amount, total_count, cart_id").
+		Select("total_amount, total_count, cart_id, created_at, updated_at").
 		Where(cond).First(&cart)
 
 	cond2 := map[string]interface{}{
@@ -245,7 +245,7 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 	}
 
 	DataHandler.Debug().Table("cart_items").
-		Select("count, amount, item_id").
+		Select("count, amount, item_id, created_at, updated_at").
 		Where(cond2).Find(&cartItems)
 
 	// 循环查询缓存获得item 详细信息
