@@ -188,7 +188,7 @@ func (m Cart) Save(item Item) error {
 			cartItem.Count = 1   // 首次添加 (往后直接累加)
 			cartItem.Amount = cartItem.CalculateAmount()
 			cartItem.Currency = item.Currency
-
+			logger.Logger.WithField("item", item).WithField("cartItem", cartItem)
 			// 单个商品首次添加
 			if err := tx.Create(&cartItem).Error; err != nil {
 				// 返回任何错误都会回滚事务
