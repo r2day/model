@@ -184,15 +184,21 @@ func (m Cart) Save(item Item) error {
 			cartItem.CartItemId = util.GetCartItemId()
 			cartItem.CartId = m.CartId
 			cartItem.ItemId = item.ItemId
-			cartItem.Item = item // 以后不再需要重复赋值
-			cartItem.Count = 1   // 首次添加 (往后直接累加)
+			// cartItem.Item = item // 以后不再需要重复赋值
+			cartItem.Count = 1 // 首次添加 (往后直接累加)
 			cartItem.Amount = cartItem.CalculateAmount()
 			cartItem.Currency = item.Currency
 			logger.Logger.WithField("item", item).WithField("cartItem", cartItem)
 			// 单个商品首次添加
+			if err := tx.Create(&item).Error; err != nil {
+				// 返回任何错误都会回滚事务
+				logger.Logger.WithField("item", item).WithError(err)
+				return err
+			}
+			// 单个商品首次添加
 			if err := tx.Create(&cartItem).Error; err != nil {
 				// 返回任何错误都会回滚事务
-				logger.Logger.WithField("item", item).WithField("cartItem", cartItem).WithError(err)
+				logger.Logger.WithField("cartItem", cartItem).WithError(err)
 				return err
 			}
 			// 返回 nil 提交事务
