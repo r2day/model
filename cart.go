@@ -205,7 +205,6 @@ func (m Cart) Save(item Item) error {
 			logger.Logger.Info("create a new cartItem successful")
 			// TODO send to MQ / ES save it
 
-			return nil
 		} else {
 			logger.Logger.Info("ready to increment a cart number")
 			// 更新cartItem
@@ -222,6 +221,7 @@ func (m Cart) Save(item Item) error {
 			Where(cartCond).
 			UpdateColumn("total_amount", gorm.Expr("total_amount + ?", item.Price)).
 			UpdateColumn("total_count", gorm.Expr("total_count + ?", 1)) // 每次增加一个？
+
 		return nil
 	})
 
@@ -243,7 +243,7 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 
 	// 查询当前购物车的状态
 	DataHandler.Debug().Table("carts").
-		Select("total_amount, total_count, cart_id, created_at, updated_at").
+		Select("total_amount, total_count, cart_id, store_id, created_at, updated_at").
 		Where(cond).First(&cart)
 
 	cond2 := map[string]interface{}{
