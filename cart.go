@@ -244,7 +244,7 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 		"cart_id": cart.CartId,
 	}
 
-	DataHandler.Debug().Table("cart_item").
+	DataHandler.Debug().Table("cart_items").
 		Select("count, amount, item_id").
 		Where(cond2).Find(&cartItems)
 
@@ -279,12 +279,12 @@ func (m Cart) MinusCart(item Item) error {
 		"user_id":     m.UserId,
 	}
 	// 当product_number是1时，删除记录
-	DataHandler.Debug().Table("cart_item").
+	DataHandler.Debug().Table("cart_items").
 		Where(cartItemCond).
 		Delete(&CartItem{})
 
 	// 如果不为最后一个则，直接减1
-	DataHandler.Debug().Table("cart_item").
+	DataHandler.Debug().Table("cart_items").
 		Where(cartItemCond2).
 		UpdateColumn("amount", gorm.Expr("amount - ?", item.Price)).
 		UpdateColumn("count", gorm.Expr("count - ?", 1))
