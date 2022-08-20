@@ -80,8 +80,8 @@ type CartItem struct {
 	Item Item `json:"item" gorm:"item"`
 }
 
-func (m *CartItem) CalculateAmount() float64 {
-	return float64(m.Count) * m.Item.Price
+func (m *CartItem) CalculateAmount(count int, price float64) float64 {
+	return float64(count) * price
 }
 
 // Cart 购物车
@@ -186,7 +186,7 @@ func (m Cart) Save(item Item) error {
 			cartItem.ItemId = item.ItemId
 			// cartItem.Item = item // 以后不再需要重复赋值
 			cartItem.Count = 1 // 首次添加 (往后直接累加)
-			cartItem.Amount = cartItem.CalculateAmount()
+			cartItem.Amount = cartItem.CalculateAmount(1, item.Price)
 			cartItem.Currency = item.Currency
 			logger.Logger.WithField("item", item).WithField("cartItem", cartItem)
 			// 单个商品首次添加
