@@ -3,8 +3,8 @@ package model
 import (
 	"time"
 
-	"github.com/r2day/base/util"
 	logger "github.com/r2day/base/log"
+	"github.com/r2day/base/util"
 	"gorm.io/gorm"
 )
 
@@ -127,8 +127,8 @@ func (m Cart) Init() Cart {
 	// 购物车初始化
 	// 查询cartItem条件
 	cond := map[string]interface{}{
-		"merchant_id":     m.MerchantId,
-		"store_id":     m.StoreId,
+		"merchant_id": m.MerchantId,
+		"store_id":    m.StoreId,
 		"user_id":     m.UserId,
 	}
 	// 获取当前购物车列表
@@ -166,7 +166,7 @@ func (m Cart) Save(item Item) error {
 
 		// 查询cartItem条件
 		cond := map[string]interface{}{
-			"item_id":     item.ItemId,
+			"item_id": item.ItemId,
 		}
 
 		// 获取当前购物车列表
@@ -185,7 +185,7 @@ func (m Cart) Save(item Item) error {
 			cartItem.CartId = m.CartId
 			cartItem.ItemId = item.ItemId
 			cartItem.Item = item // 以后不再需要重复赋值
-			cartItem.Count = 1 // 首次添加 (往后直接累加)
+			cartItem.Count = 1   // 首次添加 (往后直接累加)
 			cartItem.Amount = cartItem.CalculateAmount()
 			cartItem.Currency = item.Currency
 
@@ -236,14 +236,13 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 	}
 
 	// 查询当前购物车的状态
-	DataHandler.Debug().Table("cart").
+	DataHandler.Debug().Table("carts").
 		Select("total_amount, total_count, cart_id").
 		Where(cond).First(&cart)
 
-
-		cond2 := map[string]interface{}{
-			"cart_id": cart.CartId,
-		}
+	cond2 := map[string]interface{}{
+		"cart_id": cart.CartId,
+	}
 
 	DataHandler.Debug().Table("cart_item").
 		Select("count, amount, item_id").
@@ -263,17 +262,15 @@ func (m Cart) GetCartInfo() (Cart, []*CartItem, error) {
 func (m Cart) MinusCart(item Item) error {
 	const productNumber = 1 // 每次减1
 
-
-
 	// 查询条件
 	cartItemCond := map[string]interface{}{
-		"item_id":     item.ItemId,
-		"count":     1, // 如果当前是1则直接移除
+		"item_id": item.ItemId,
+		"count":   1, // 如果当前是1则直接移除
 	}
 
 	// 查询条件
 	cartItemCond2 := map[string]interface{}{
-		"item_id":     item.ItemId,
+		"item_id": item.ItemId,
 	}
 
 	cartCond := map[string]interface{}{
@@ -293,7 +290,7 @@ func (m Cart) MinusCart(item Item) error {
 		UpdateColumn("count", gorm.Expr("count - ?", 1))
 
 	// 购物车总体减一次
-	DataHandler.Debug().Table("cart").
+	DataHandler.Debug().Table("carts").
 		Where(cartCond).
 		UpdateColumn("total_amount", gorm.Expr("total_amount - ?", item.Price)).
 		UpdateColumn("total_count", gorm.Expr("total_count - ?", 1))
