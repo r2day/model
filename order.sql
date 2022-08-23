@@ -1,0 +1,41 @@
+CREATE TABLE `order_items` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `status` varchar(191) DEFAULT 'effected',
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `order_id` char(128) DEFAULT NULL,
+  `order_item_id` char(128) DEFAULT NULL,
+  `item_id` char(128) DEFAULT NULL,
+  `count` bigint DEFAULT NULL,
+  `amount` double DEFAULT NULL,
+  `currency` char(8),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `orders` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `admin_id` longtext,
+  `merchant_id` longtext,
+  `status` varchar(16) DEFAULT 'effected',
+  `created_at` datetime(3) DEFAULT NULL,
+  `updated_at` datetime(3) DEFAULT NULL,
+  `store_id` longtext,
+  `user_id` longtext,
+  `package_fee` longtext,
+  `delivery_fee` longtext,
+  `payment_method` longtext,
+  `balance` double DEFAULT NULL,
+  `actually_paid` double DEFAULT NULL,
+  `order_status` bigint DEFAULT NULL,
+  `order_time` longtext,
+  `store_name` longtext,
+  `order_id` char(128) DEFAULT NULL,
+  `address` longtext,
+  `seq` bigint DEFAULT NULL,
+  `way_of_eating` longtext,
+  `pick_up_time` longtext,
+  `remark` longtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
