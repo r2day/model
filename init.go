@@ -50,5 +50,9 @@ func InitDataBase(dsn string) error {
 	// DataHandler.AutoMigrate(&Item{})
 	// 账号
 	DataHandler.AutoMigrate(&AddressModel{})
+
+	DataHandler.AutoMigrate(&OrderItem{})
+	// 账号
+	DataHandler.AutoMigrate(&Order{})
 	return nil
 }
