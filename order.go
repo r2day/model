@@ -4,6 +4,7 @@ import (
 	"time"
 
 	logger "github.com/r2day/base/log"
+	btime "github.com/r2day/base/time"
 	"github.com/r2day/base/util"
 	"github.com/r2day/enum"
 	"gorm.io/gorm"
@@ -158,15 +159,16 @@ func (m Order) PlaceOrder() error {
 			Delete(&CartItem{})
 
 		// step05 回填订单信息
-		order := Order{}
+		// order := Order{}
 
 		// 这里可以增加会员计算优惠
-		order.ActuallyPaid = cart.TotalAmount
-		order.DeliveryFee = "2.00"
-		order.ItemList = orderItem
-		order.OrderId = theOrderId
+		m.ActuallyPaid = cart.TotalAmount
+		m.ItemList = orderItem
+		m.OrderId = theOrderId
+		m.OrderStatus = enum.Init
+		m.OrderTime = btime.GetCurrentTime()
 
-		DataHandler.Create(&order)
+		DataHandler.Create(&m)
 
 		return nil
 	})
@@ -178,58 +180,6 @@ func (m Order) PlaceOrder() error {
 
 // Save 保存实例
 func (m Order) Save() error {
-	// // 查询购物车
-	// goodsInCart := make([]Cart, 0)
-	//
-	// err := DataHandler.Transaction(func(tx *gorm.DB) error {
-	//
-	// 	// 查询条件
-	// 	cond := map[string]interface{}{
-	// 		"merchant_id": m.MerchantId,
-	// 		"store_id":    m.StoreId,
-	// 		"user_id":     m.UserId,
-	// 	}
-	//
-	// 	// 获取当前购物车列表
-	// 	err := tx.Model(&Cart{}).Where(cond).Find(&goodsInCart).Error
-	// 	if err != nil {
-	// 		logger.Logger.WithField("cond", cond).
-	// 			WithError(err)
-	// 		// return err
-	// 	}
-	//
-	// 	if len(goodsInCart) == 0 {
-	// 		// 购物车为空
-	// 		logger.Logger.Warn("cart is empty")
-	// 		return nil
-	// 	} else {
-	// 		// 将购物车的物品搬到订单中
-	// 		for _, i := range goodsInCart {
-	// 			logger.Logger.Info("ready to place")
-	// 			// 从仓库中扣除
-	// 			//
-	// 			o := Order{
-	// 				AdminId:     i.AdminId,
-	// 				MerchantId:  i.MerchantId,
-	// 				Status:      "place",
-	// 				StoreId:     i.StoreId,
-	// 				UserId:      i.UserId,
-	// 				ProductId:   i.UserId,
-	// 				ProductName: i.ProductName,
-	// 				TotalPrice:  i.TotalPrice,
-	// 			}
-	// 			logger.Logger.Info("TODO send order to mq -->", o)
-	//
-	// 			tx.Model(&CartModel{}).
-	// 				Where(cond).
-	// 				UpdateColumn("total_price", gorm.Expr("total_price + ?", m.TotalPrice)).
-	// 				UpdateColumn("product_number", gorm.Expr("product_number + ?", m.ProductNumber))
-	// 			logger.Logger.Info("increment a cart number successful")
-	// 		}
-	// 	}
-	// 	return nil
-	// })
-
 	return nil
 
 }
