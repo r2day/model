@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"time"
 
 	logger "github.com/r2day/base/log"
@@ -123,6 +124,10 @@ func (m Order) PlaceOrder() error {
 				WithError(err)
 			return err
 		}
+		if cart.TotalCount == 0 {
+			return errors.New("nothing need to place, please go to add something into cart")
+		}
+
 		// step02 查询购物车中的商品信息
 		cartItem := make([]CartItem, 0)
 		cond2 := map[string]interface{}{
@@ -170,6 +175,11 @@ func (m Order) PlaceOrder() error {
 
 		DataHandler.Create(&m)
 
+		// step06 更新购物车信息
+		tx.Model(&Cart{}).
+			Where(cond).
+			UpdateColumn("total_amount", 0).
+			UpdateColumn("total_count", 0)
 		return nil
 	})
 	if err != nil {
