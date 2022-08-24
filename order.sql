@@ -32,7 +32,7 @@ CREATE TABLE `orders` (
   `store_name` longtext,
   `order_id` char(128) DEFAULT NULL,
   `address` longtext,
-  `seq` bigint DEFAULT NULL,
+  `seq` char(16) DEFAULT "R0001",
   `way_of_eating` longtext,
   `pick_up_time` longtext,
   `remark` longtext,

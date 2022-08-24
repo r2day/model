@@ -97,7 +97,7 @@ type Order struct {
 	// 收货地址
 	Address string `json:"address" gorm:"address"`
 	// 取单号 (根据门店每天自动生成) 5001
-	Seq int `json:"seq" gorm:"seq"`
+	Seq string `json:"seq" gorm:"seq"`
 	// 就餐方式 (堂食、外卖)
 	WayOfEating string `json:"way_of_eating" gorm:"way_of_eating"`
 	// 取餐时间
