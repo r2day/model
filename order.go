@@ -193,3 +193,22 @@ func (m Order) Save() error {
 	return nil
 
 }
+
+func (m Order) OrderList() ([]*Order, error) {
+	orderList := make([]*Order, 0)
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"merchant_id":  m.MerchantId,
+		"store_id":     m.StoreId,
+		"user_id":      m.UserId,
+		"order_status": m.OrderStatus,
+	}
+
+	DataHandler.Debug().Table("orders").
+		Select("package_fee, delivery_fee, payment_method, balance, actually_paid, order_status, order_time, store_name, order_id, address, seq, way_of_eating, pick_up_time, remark").
+		Where(cond).Find(&orderList)
+
+	return orderList, nil
+
+}
