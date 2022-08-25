@@ -90,6 +90,8 @@ type Order struct {
 	OrderStatus enum.OrderStatusEnum `json:"order_status" gorm:"order_status"`
 	// 下单时间 2022.08.14 15:27
 	OrderTime string `json:"order_time" gorm:"order_time"`
+	// OrderPayTimeLeft (don't save to mysql, because it save on redis)
+	OrderPayTimeLeft string `json:"order_pay_time_left" gorm:"order_pay_time_left"`
 	// 下单门店
 	StoreName string `json:"store_name" gorm:"store_name"`
 	// 订单号
