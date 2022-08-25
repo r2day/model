@@ -106,7 +106,7 @@ type Order struct {
 	Remark string `json:"remark" gorm:"remark"`
 }
 
-func (m Order) PlaceOrder() error {
+func (m Order) PlaceOrder() (Order, error) {
 	err := DataHandler.Transaction(func(tx *gorm.DB) error {
 
 		theOrderId := util.GetOrderId()
@@ -183,9 +183,9 @@ func (m Order) PlaceOrder() error {
 		return nil
 	})
 	if err != nil {
-		return err
+		return m, err
 	}
-	return nil
+	return m, nil
 }
 
 // Save 保存实例
