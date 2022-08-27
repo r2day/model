@@ -66,15 +66,20 @@ func (m PaymentFlow) Pay(payMethod enum.PayMethod) (string, error) {
 
 func (m PaymentFlow) financePay(transactionId string) error {
 	err := DataHandler.Transaction(func(tx *gorm.DB) error {
-		// step01 查询购物车的信息
+		// 1. 查询当前订单信息
+		orderInfo := Order{}
+		cond2 := map[string]interface{}{
+			"order_id":     m.OrderId,
+			"order_status": enum.Init,
+		}
+		err = tx.Model(&Order{}).Where(cond2).First(&orderInfo).Error
+		if err != nil {
+			logger.Logger.WithField("cond", cond2).
+				WithError(err)
+			return err
+		}
 
-		// switch payMethod {
-		// case enum.Balance:
-		//
-		// }
-		// TODO 查询account 获得id
-
-		// 1. 查询账号余额
+		// 2. 查询账号余额
 		fin := Finance{}
 		cond1 := map[string]interface{}{
 			"account_id": m.AccountId,
@@ -86,32 +91,27 @@ func (m PaymentFlow) financePay(transactionId string) error {
 			return err
 		}
 
-		orderInfo := Order{}
-		cond2 := map[string]interface{}{
-			"order_id": m.OrderId,
-		}
-
-		// 2. 查询当前订单的金额币种信息
-		err = tx.Model(&Order{}).Where(cond2).First(&orderInfo).Error
-		if err != nil {
-			logger.Logger.WithField("cond", cond2).
-				WithError(err)
-			return err
-		}
+		// 3. 判断当前余额是否足以支付
 		if orderInfo.ActuallyPaid > fin.Balance {
 			return errors.New("balance no enough to pay")
 		}
 
-		// step06 更新账号余额
+		// 4. 更新账号余额
 		tx.Model(&Finance{}).
 			Where(cond1).
 			UpdateColumn("balance", gorm.Expr("balance - ?", orderInfo.ActuallyPaid))
 
-		// 写流水 (先写到mysql 后续会同步到es并且删除mysql的流水)
+		// 5. 写流水
+		//  (先写到mysql 后续会同步到es并且删除mysql的流水)
 		m.Amount = orderInfo.ActuallyPaid
 		m.Kind = enum.Balance
-		DataHandler.Create(&m)
-		// 发消息...
+		tx.Create(&m)
+
+		// 6. 更新订单状态
+		tx.Model(&Order{}).
+			Where(cond2).
+			UpdateColumn("order_status", enum.Paid)
+
 		return nil
 	})
 	return err
