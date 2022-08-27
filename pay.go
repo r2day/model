@@ -6,6 +6,7 @@ import (
 
 	logger "github.com/r2day/base/log"
 	"github.com/r2day/base/util"
+	"github.com/r2day/enum"
 	"gorm.io/gorm"
 )
 
@@ -35,18 +36,32 @@ type PaymentFlow struct {
 	AccountId string `json:"account_id" gorm:"account_id"`
 	// 支付金额
 	Amount float64 `json:"amount" gorm:"amount" `
-	// 币种
-	// Fkind enum.Fkind `json:"fkind" gorm:"fkind"`
+	// FKind 金融类型, 例如: 积分，余额，优惠券
+	Kind enum.FKind `json:"kind" gorm:"kind"`
 }
 
 // Pay 支付
 // 支付方式:
 // balance: 余额; wechat: 微信; ...
-func (m PaymentFlow) Pay(payMethod string) (string, error) {
+func (m PaymentFlow) Pay(payMethod enum.PayMethod) (string, error) {
 
 	// 交易流水号
 	transactionId := util.TransactionId()
 
+	switch payMethod {
+	case enum.Finance:
+		return m.financePay(transactionId)
+	defualt:
+		errors.New("no suppory payment method")
+	}
+
+	if err != nil {
+		return transactionId, err
+	}
+	return transactionId, nil
+}
+
+func (m PaymentFlow) financePay(transactionId string) error {
 	err := DataHandler.Transaction(func(tx *gorm.DB) error {
 		// step01 查询购物车的信息
 
@@ -89,14 +104,10 @@ func (m PaymentFlow) Pay(payMethod string) (string, error) {
 
 		// 写流水 (先写到mysql 后续会同步到es并且删除mysql的流水)
 		m.Amount = orderInfo.ActuallyPaid
-		// m.Fkind = enum.
+		m.Fkind = enum.Balance
 		DataHandler.Create(&m)
 		// 发消息...
 		return nil
 	})
-
-	if err != nil {
-		return transactionId, err
-	}
-	return transactionId, nil
+	return err
 }

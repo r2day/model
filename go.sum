@@ -201,6 +201,8 @@ github.com/r2day/enum v1.0.1/go.mod h1:eftSho9m88GGWGyw+Ob7djDcsmXmra2ZNFBh6ITXm
 github.com/r2day/enum v1.0.2 h1:GyVSLDMwW4LLIKbcdkhNqdywEw962vAoYX1VCLn+0LQ=
 github.com/r2day/enum v1.0.2/go.mod h1:eftSho9m88GGWGyw+Ob7djDcsmXmra2ZNFBh6ITXm5s=
 github.com/r2day/enum v1.0.3/go.mod h1:eftSho9m88GGWGyw+Ob7djDcsmXmra2ZNFBh6ITXm5s=
+github.com/r2day/enum v1.0.5 h1:t4CZNDvhNKzOP6yAq2QGicmymrymCYftliJNIYHjEns=
+github.com/r2day/enum v1.0.5/go.mod h1:eftSho9m88GGWGyw+Ob7djDcsmXmra2ZNFBh6ITXm5s=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
 github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUAtL9R8=

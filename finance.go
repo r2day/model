@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/r2day/enum"
 )
 
 // Finance 账号信息
