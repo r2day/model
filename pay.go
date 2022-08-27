@@ -49,10 +49,13 @@ func (m PaymentFlow) Pay(payMethod enum.PayMethod) (string, error) {
 	transactionId := util.TransactionId()
 
 	switch payMethod {
-	case enum.Finance:
-		return m.financePay(transactionId)
-	defualt:
-		errors.New("no suppory payment method")
+	case enum.Fiance:
+		err := m.financePay(transactionId)
+		if err != nil {
+			return "", err
+		}
+	default:
+		return "", errors.New("no suppory payment method")
 	}
 
 	if err != nil {
@@ -104,7 +107,7 @@ func (m PaymentFlow) financePay(transactionId string) error {
 
 		// 写流水 (先写到mysql 后续会同步到es并且删除mysql的流水)
 		m.Amount = orderInfo.ActuallyPaid
-		m.Fkind = enum.Balance
+		m.Kind = enum.Balance
 		DataHandler.Create(&m)
 		// 发消息...
 		return nil
