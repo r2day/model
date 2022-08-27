@@ -37,7 +37,7 @@ type PaymentFlow struct {
 	// 支付金额
 	Amount float64 `json:"amount" gorm:"amount" `
 	// FKind 金融类型, 例如: 积分，余额，优惠券
-	Kind enum.FKind `json:"kind" gorm:"kind"`
+	Kind enum.Fkind `json:"kind" gorm:"kind"`
 }
 
 // Pay 支付

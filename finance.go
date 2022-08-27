@@ -24,7 +24,7 @@ type Finance struct {
 	// AccountId 账号id
 	AccountId string `json:"account_id" gorm:"account_id"`
 	// FKind 金融类型, 例如: 积分，余额，优惠券
-	Kind enum.FKind `json:"kind" gorm:"kind"`
+	Kind enum.Fkind `json:"kind" gorm:"kind"`
 	// Fid 金融编号
 	FId string `json:"item_id" gorm:"item_id"`
 	// Balance 余额
