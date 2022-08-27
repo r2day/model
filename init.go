@@ -47,11 +47,11 @@ func InitDataBase(dsn string) error {
 	// 账号
 	// DataHandler.AutoMigrate(&CartItem{})
 	// 账号
-	// DataHandler.AutoMigrate(&Item{})
+	DataHandler.AutoMigrate(&PaymentFlow{})
 	// 账号
 	DataHandler.AutoMigrate(&AddressModel{})
 
-	// DataHandler.AutoMigrate(&OrderItem{})
+	DataHandler.AutoMigrate(&Finance{})
 	// 账号
 	// DataHandler.AutoMigrate(&Order{})
 	return nil
