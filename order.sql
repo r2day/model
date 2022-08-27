@@ -36,6 +36,7 @@ CREATE TABLE `orders` (
   `way_of_eating` longtext,
   `pick_up_time` longtext,
   `remark` longtext,
+  `order_pay_time_left` char(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

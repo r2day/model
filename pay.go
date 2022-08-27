@@ -72,12 +72,14 @@ func (m PaymentFlow) financePay(transactionId string) error {
 		// case enum.Balance:
 		//
 		// }
+		// TODO 查询account 获得id
+
 		// 1. 查询账号余额
 		fin := Finance{}
 		cond1 := map[string]interface{}{
 			"account_id": m.AccountId,
 		}
-		err := tx.Model(&AccountInfo{}).Where(cond1).First(&fin).Error
+		err := tx.Model(&Finance{}).Where(cond1).First(&fin).Error
 		if err != nil {
 			logger.Logger.WithField("cond", cond1).
 				WithError(err)
@@ -86,7 +88,7 @@ func (m PaymentFlow) financePay(transactionId string) error {
 
 		orderInfo := Order{}
 		cond2 := map[string]interface{}{
-			"order_id": m.MerchantId,
+			"order_id": m.OrderId,
 		}
 
 		// 2. 查询当前订单的金额币种信息
