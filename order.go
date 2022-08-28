@@ -214,3 +214,37 @@ func (m Order) OrderList() ([]*Order, error) {
 	return orderList, nil
 
 }
+
+// FindOne 查找单个订单的详情信息
+// 调用方: consumer-查找订单信息并且同步到es
+func (m Order) FindOne() (Order, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"order_id": m.OrderId,
+		"order_status": m.OrderStatus,
+	}
+
+	DataHandler.Debug().Table("orders").
+		Select("*").
+		Where(cond).Find(&m)
+
+	return m, nil
+}
+
+// DeleteDoneOrder 查找单个订单的详情信息
+// 调用方: consumer-当支付完成后删除记录
+func (m Order) DeleteDoneOrder() (Order, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"order_id": m.OrderId,
+		"order_status": enum.Done, // 已经完成的会被从数据库中删除 (后续把refund等状态的也删除)
+	}
+
+	DataHandler.Debug().Table("orders").
+	Where(cond).
+	Delete(&Order{})
+
+	return m, nil
+}
