@@ -221,7 +221,7 @@ func (m Order) FindOne() (Order, error) {
 
 	// 查询条件
 	cond := map[string]interface{}{
-		"order_id": m.OrderId,
+		"order_id":     m.OrderId,
 		"order_status": m.OrderStatus,
 	}
 
@@ -238,13 +238,27 @@ func (m Order) DeleteDoneOrder() (Order, error) {
 
 	// 查询条件
 	cond := map[string]interface{}{
-		"order_id": m.OrderId,
+		"order_id":     m.OrderId,
 		"order_status": enum.Done, // 已经完成的会被从数据库中删除 (后续把refund等状态的也删除)
 	}
 
 	DataHandler.Debug().Table("orders").
-	Where(cond).
-	Delete(&Order{})
+		Where(cond).
+		Delete(&Order{})
 
+	return m, nil
+}
+
+// CloseOrder 关闭未按时支付的订单
+func (m Order) CloseOrder() (Order, error) {
+	// 查询条件
+	cond := map[string]interface{}{
+		"order_id":     m.OrderId,
+		"order_status": enum.Init, //
+	}
+
+	DataHandler.Model(&Order{}).
+		Where(cond).
+		UpdateColumn("order_status", enum.OutOfPayTime)
 	return m, nil
 }
