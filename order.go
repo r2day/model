@@ -227,7 +227,7 @@ func (m Order) FindOne() (Order, error) {
 
 	DataHandler.Debug().Table("orders").
 		Select("*").
-		Where(cond).Find(&m)
+		Where(cond).First(&m)
 
 	return m, nil
 }
@@ -246,10 +246,16 @@ func (m Order) DeleteDoneOrder() (Order, error) {
 		Where(cond).
 		Delete(&Order{})
 
+	m, err := m.FindOne()
+	if err != nil {
+		return m, err
+	}
+
 	return m, nil
 }
 
 // CloseOrder 关闭未按时支付的订单
+// 定期从关单列表mysql 中移除 (因为es已经有备份)
 func (m Order) CloseOrder() (Order, error) {
 	// 查询条件
 	cond := map[string]interface{}{
@@ -260,5 +266,10 @@ func (m Order) CloseOrder() (Order, error) {
 	DataHandler.Model(&Order{}).
 		Where(cond).
 		UpdateColumn("order_status", enum.OutOfPayTime)
+
+	m, err := m.FindOne()
+	if err != nil {
+		return m, err
+	}
 	return m, nil
 }
