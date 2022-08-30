@@ -262,14 +262,14 @@ func (m Order) CloseOrder() (Order, error) {
 		"order_id":     m.OrderId,
 		"order_status": enum.Init, //
 	}
+	m, err := m.FindOne()
+	if err != nil {
+		return m, err
+	}
 
 	DataHandler.Model(&Order{}).
 		Where(cond).
 		UpdateColumn("order_status", enum.OutOfPayTime)
 
-	m, err := m.FindOne()
-	if err != nil {
-		return m, err
-	}
 	return m, nil
 }
