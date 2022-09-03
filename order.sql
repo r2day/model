@@ -18,8 +18,8 @@ CREATE TABLE `orders` (
   `admin_id` longtext,
   `merchant_id` longtext,
   `status` varchar(16) DEFAULT 'effected',
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `store_id` longtext,
   `user_id` longtext,
   `package_fee` longtext,
@@ -37,6 +37,7 @@ CREATE TABLE `orders` (
   `pick_up_time` longtext,
   `remark` longtext,
   `order_pay_time_left` char(128) DEFAULT NULL,
+  INDEX (order_status, order_id),
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
