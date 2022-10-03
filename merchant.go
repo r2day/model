@@ -1,14 +1,19 @@
 package model
 
 import (
-	"gorm.io/gorm"
 	"log"
+	"time"
 )
 
 // MerchantApply 商户入驻申请
 // 会进行增长的表后续都会进行数据迁移或者清理
 type MerchantApply struct {
-	gorm.Model
+	// Id 自增唯一id
+	Id uint `json:"id" gorm:"unique"`
+	// CreatedAt 创建时间
+	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
+	// UpdatedAt 修改时间
+	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
 	// 自定义字段
 	Email         string `json:"email" gorm:"email"`
 	Name          string `json:"name" gorm:"name"`
