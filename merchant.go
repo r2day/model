@@ -11,25 +11,26 @@ type MerchantApply struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
 	// CreatedAt 创建时间
-	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
+	CreatedAt time.Time
 	// UpdatedAt 修改时间
-	UpdatedAt time.Time `json:"updated_at" gorm:"updated_at"`
+	UpdatedAt time.Time
+
 	// 自定义字段
-	Email         string `json:"email" gorm:"email"`
-	Name          string `json:"name" gorm:"name"`
-	IdCard        string `json:"id_card" gorm:"id_card"`
-	PrincipalName string `json:"principal_name" gorm:"principal_name"`
-	Phone         string `json:"phone" gorm:"phone"`
-	License       string `json:"license" gorm:"license"`
-	Status        string `json:"status" gorm:"status"`
+	Email         string `json:"email"`
+	Name          string `json:"name"`
+	IdCard        string `json:"id_card"`
+	PrincipalName string `json:"principal_name"`
+	Phone         string `json:"phone"`
+	License       string `json:"license"`
+	Status        string `json:"status"`
 	// Type 商户类型(加盟、连锁、新)
-	Type string `json:"type" gorm:"type"`
+	Type string `json:"type"`
 	// 申请回执
-	ApplyCode string `json:"apply_code" gorm:"apply_code"`
+	ApplyCode string `json:"apply_code"`
 	// 申请通过后生成的merchant_id
-	MerchantId string `json:"merchant_id" gorm:"merchant_id"`
+	MerchantId string `json:"merchant_id"`
 	// 申请通过后生成的密钥
-	MerchantKey string `json:"merchant_key" gorm:"merchant_key"`
+	MerchantKey string `json:"merchant_key"`
 }
 
 // MerchantInfo 商户信息表
