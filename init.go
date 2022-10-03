@@ -23,6 +23,9 @@ func InitDataBase(dsn string) error {
 	// 注册model
 	// 自动同步数据库模型
 	// 用户管理(用于管理当前系统的用户权限)
+	// 商户号申请
+	DataHandler.AutoMigrate(&MerchantApply{})
+
 	DataHandler.AutoMigrate(&User{})
 	// 品牌管理 (超级管理员权限)
 	DataHandler.AutoMigrate(&Brand{})
@@ -44,8 +47,6 @@ func InitDataBase(dsn string) error {
 	DataHandler.AutoMigrate(&AccountInfo{})
 	// 账号
 	// DataHandler.AutoMigrate(&Cart{})
-	// 账号
-	// DataHandler.AutoMigrate(&CartItem{})
 	// 账号
 	DataHandler.AutoMigrate(&PaymentFlow{})
 	// 账号
