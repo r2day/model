@@ -58,7 +58,7 @@ func (m MerchantApply) Save() error {
 
 // ListAll 获取所有数据
 // 以便管理员进行审核操作
-func (m MerchantApply) ListAll() ([]Dishes, error) {
+func (m MerchantApply) ListAll() ([]MerchantApply, error) {
 	instance := make([]MerchantApply, 0)
 	err := DataHandler.Where("status = ?", m).Find(&instance).Error
 	if err != nil {
@@ -67,7 +67,7 @@ func (m MerchantApply) ListAll() ([]Dishes, error) {
 		// 保存成功可以进行消息通知操作
 		// TODO send to mq
 		log.Println("send to mq")
-		return nil, nil
+		return instance, nil
 	}
 }
 
@@ -78,7 +78,7 @@ func (m MerchantApply) FindOne() (MerchantApply, error) {
 	cond := map[string]interface{}{
 		"apply_code": m.ApplyCode,
 	}
-	err := DataHandler.Debug().Table("orders").
+	err := DataHandler.Debug().Table("merchant_applies").
 		Select("*").
 		Where(cond).First(&m).Error
 	if err != nil {
