@@ -60,7 +60,7 @@ func (m MerchantApply) Save() error {
 // 以便管理员进行审核操作
 func (m MerchantApply) ListAll() ([]MerchantApply, error) {
 	instance := make([]MerchantApply, 0)
-	err := DataHandler.Where("status = ?", m).Find(&instance).Error
+	err := DataHandler.Table("merchant_applies").Where("status = ?", m).Find(&instance).Error
 	if err != nil {
 		return nil, err
 	} else {
