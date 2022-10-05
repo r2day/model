@@ -102,7 +102,7 @@ func (m MerchantApply) UpdateStatus(status string) error {
 	case "reject":
 		log.Println("apply reject")
 	}
-	err := DataHandler.Updates(m).
+	err := DataHandler.Debug().Table("merchant_applies").Updates(m).
 		Where("id = ?", m.Id).Error
 	if err != nil {
 		return err
