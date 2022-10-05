@@ -93,17 +93,23 @@ func (m MerchantApply) FindOne() (MerchantApply, error) {
 
 // UpdateStatus 更新状态
 // 审批通过/失败后进行
-func (m MerchantApply) UpdateStatus(status string) error {
-
+func (m MerchantApply) UpdateStatus(status string) (err error) {
 	switch status {
 	case "ok":
 		log.Println("apply pass")
-		m.MerchantKey = "generate key ...."
+		merchantId := "xxx"
+		merchantKey := "yyy"
+		err = DataHandler.Debug().Table("merchant_applies").
+			UpdateColumn("status", status).
+			UpdateColumn("merchant_id", merchantId).
+			UpdateColumn("merchant_key", merchantKey).
+			Where("id = ?", m.Id).Error
 	case "reject":
 		log.Println("apply reject")
+		err = DataHandler.Debug().Table("merchant_applies").
+			UpdateColumn("status", status).
+			Where("id = ?", m.Id).Error
 	}
-	err := DataHandler.Debug().Table("merchant_applies").Updates(m).
-		Where("id = ?", m.Id).Error
 	if err != nil {
 		return err
 	} else {
