@@ -20,13 +20,14 @@ type MerchantApply struct {
 	Name          string `json:"name"`
 	IdCard        string `json:"id_card"`
 	PrincipalName string `json:"principal_name"`
-	Phone         string `json:"phone"`
-	License       string `json:"license"`
-	Status        string `json:"status"`
+	// 每个手机号仅能申请一次
+	Phone   string `json:"phone" gorm:"index:idx_phone,unique"`
+	License string `json:"license"`
+	Status  string `json:"status"`
 	// Type 商户类型(加盟、连锁、新)
 	Type string `json:"type"`
 	// 申请回执
-	ApplyCode string `json:"apply_code"`
+	ApplyCode string `json:"apply_code" gorm:"index:idx_apply_code,unique"`
 	// 申请通过后生成的merchant_id
 	MerchantId string `json:"merchant_id"`
 	// 申请通过后生成的密钥
@@ -42,6 +43,26 @@ type MerchantApply struct {
 //	// 申请通过后生成的密钥
 //	MerchantKey string `json:"merchant_key" gorm:"merchant_key"`
 //}
+
+// FindIfPhoneHasRegister 检查当前手机号是不是已经注册过
+func (m MerchantApply) FindIfPhoneHasRegister() (MerchantApply, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"phone": m.Phone,
+	}
+	err := DataHandler.Debug().Table("merchant_applies").
+		Select("*").
+		Where(cond).First(&m).Error
+	if err != nil {
+		return m, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		// TODO send to mq
+		log.Println("send to mq")
+		return m, nil
+	}
+}
 
 // Save 保存实例
 func (m MerchantApply) Save() error {
