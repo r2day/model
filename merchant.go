@@ -140,16 +140,16 @@ func (m MerchantApply) UpdateStatus(status string) (err error) {
 	switch status {
 	case "ok":
 		log.Println("apply pass")
-		merchantId := "xxx"
-		merchantKey := "yyy"
+		//merchantId := "xxx"
+		//merchantKey := "yyy"
 		cond := map[string]interface{}{
 			"id": m.Id,
 		}
 		err = DataHandler.Model(&MerchantApply{}).
 			Where(cond).
 			UpdateColumn("status", status).
-			UpdateColumn("merchant_id", merchantId).
-			UpdateColumn("merchant_key", merchantKey).Error
+			UpdateColumn("merchant_id", m.MerchantId).
+			UpdateColumn("merchant_key", m.MerchantKey).Error
 
 	case "reject":
 		log.Println("apply reject")
