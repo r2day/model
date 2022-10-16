@@ -112,6 +112,28 @@ func (m MerchantApply) FindOne() (MerchantApply, error) {
 	}
 }
 
+// FindByMerchantId 通过商户id查询
+// 审批通过后才有商户id
+func (m MerchantApply) FindByMerchantId() (MerchantApply, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"merchant_id": m.MerchantId,
+		"status":      "ok", // TODO 状态统一定义到enum中
+	}
+	err := DataHandler.Debug().Table("merchant_applies").
+		Select("*").
+		Where(cond).First(&m).Error
+	if err != nil {
+		return m, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		// TODO send to mq
+		log.Println("send to mq")
+		return m, nil
+	}
+}
+
 // UpdateStatus 更新状态
 // 审批通过/失败后进行
 func (m MerchantApply) UpdateStatus(status string) (err error) {
