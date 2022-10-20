@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/r2day/enum"
 	"log"
 	"time"
 )
@@ -21,11 +22,11 @@ type MerchantApply struct {
 	IdCard        string `json:"id_card"`
 	PrincipalName string `json:"principal_name"`
 	// 每个手机号仅能申请一次
-	Phone   string `json:"phone" gorm:"index:idx_phone,unique"`
-	License string `json:"license"`
-	Status  string `json:"status"`
+	Phone   string                  `json:"phone" gorm:"index:idx_phone,unique"`
+	License string                  `json:"license"`
+	Status  enum.MerchantStatusEnum `json:"status"`
 	// Type 商户类型(加盟、连锁、新)
-	Type string `json:"type"`
+	Type enum.MerchantTypeEnum `json:"type"`
 	// 申请回执
 	ApplyCode string `json:"apply_code" gorm:"index:idx_apply_code,unique"`
 	// 申请通过后生成的merchant_id
@@ -33,16 +34,6 @@ type MerchantApply struct {
 	// 申请通过后生成的密钥
 	MerchantKey string `json:"merchant_key"`
 }
-
-// MerchantInfo 商户信息表
-// 当申请审核通过后保留全部申请信息
-//type MerchantInfo struct {
-//	gorm.Model
-//	// 自定义字段
-//	MerchantApply
-//	// 申请通过后生成的密钥
-//	MerchantKey string `json:"merchant_key" gorm:"merchant_key"`
-//}
 
 // FindIfPhoneHasRegister 检查当前手机号是不是已经注册过
 func (m MerchantApply) FindIfPhoneHasRegister() (MerchantApply, error) {
@@ -119,7 +110,7 @@ func (m MerchantApply) FindByMerchantId() (MerchantApply, error) {
 	// 查询条件
 	cond := map[string]interface{}{
 		"merchant_id": m.MerchantId,
-		"status":      "ok", // TODO 状态统一定义到enum中
+		"status":      enum.MerchantApproved, // TODO 状态统一定义到enum中
 	}
 	err := DataHandler.Debug().Table("merchant_applies").
 		Select("*").
@@ -136,12 +127,10 @@ func (m MerchantApply) FindByMerchantId() (MerchantApply, error) {
 
 // UpdateStatus 更新状态
 // 审批通过/失败后进行
-func (m MerchantApply) UpdateStatus(status string) (err error) {
+func (m MerchantApply) UpdateStatus(status enum.MerchantStatusEnum) (err error) {
 	switch status {
-	case "ok":
+	case enum.MerchantApproved:
 		log.Println("apply pass")
-		//merchantId := "xxx"
-		//merchantKey := "yyy"
 		cond := map[string]interface{}{
 			"id": m.Id,
 		}
@@ -151,7 +140,7 @@ func (m MerchantApply) UpdateStatus(status string) (err error) {
 			UpdateColumn("merchant_id", m.MerchantId).
 			UpdateColumn("merchant_key", m.MerchantKey).Error
 
-	case "reject":
+	case enum.MerchantDisabled:
 		log.Println("apply reject")
 		cond := map[string]interface{}{
 			"id": m.Id,
