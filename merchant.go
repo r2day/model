@@ -141,7 +141,15 @@ func (m MerchantApply) UpdateStatus(status enum.MerchantStatusEnum) (err error) 
 			UpdateColumn("merchant_key", m.MerchantKey).Error
 
 	case enum.MerchantDisabled:
-		log.Println("apply reject")
+		log.Println("apply disable it ")
+		cond := map[string]interface{}{
+			"id": m.Id,
+		}
+		err = DataHandler.Model(&MerchantApply{}).
+			Where(cond).
+			UpdateColumn("status", status).Error
+	case enum.MerchantInit:
+		log.Println("apply reject back")
 		cond := map[string]interface{}{
 			"id": m.Id,
 		}
