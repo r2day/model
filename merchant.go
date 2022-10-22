@@ -125,6 +125,30 @@ func (m MerchantApply) FindByMerchantId() (MerchantApply, error) {
 	}
 }
 
+// FindByEmail 通过邮件查询
+// 审批通过后才有商户id
+func (m MerchantApply) FindByEmail() (MerchantApply, error) {
+
+	// 查询条件
+	cond := map[string]interface{}{
+		"email":  m.Email,
+		"status": enum.MerchantApproved, // TODO 状态统一定义到enum中
+	}
+	err := DataHandler.Debug().Table("merchant_applies").
+		Select("*").
+		Where(cond).First(&m).Error
+	if err != nil {
+		return m, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		// TODO send to mq
+		log.Println("send to mq")
+		return m, nil
+	}
+}
+
+// FindByEmail
+
 // UpdateStatus 更新状态
 // 审批通过/失败后进行
 func (m MerchantApply) UpdateStatus(status enum.MerchantStatusEnum) (err error) {
