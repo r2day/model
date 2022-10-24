@@ -191,3 +191,18 @@ func (m MerchantApply) UpdateStatus(status enum.MerchantStatusEnum) (err error) 
 		return nil
 	}
 }
+
+// UpdatePassword 更新密码
+func (m MerchantApply) UpdatePassword(password string) (err error) {
+	cond := map[string]interface{}{
+		"merchant_id": m.MerchantId,
+	}
+	err = DataHandler.Model(&MerchantApply{}).
+		Where(cond).
+		UpdateColumn("merchant_key", password).Error
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
