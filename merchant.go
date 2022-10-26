@@ -153,7 +153,7 @@ func (m MerchantApply) FindByPhone() (MerchantApply, error) {
 
 	// 查询条件
 	cond := map[string]interface{}{
-		"phone":  m.Email,
+		"phone":  m.Phone,
 		"status": enum.MerchantApproved, // TODO 状态统一定义到enum中
 	}
 	err := DataHandler.Debug().Table("merchant_applies").
