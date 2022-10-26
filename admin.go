@@ -30,7 +30,7 @@ func (m AdminAccount) FindByPhone() (AdminAccount, error) {
 	cond := map[string]interface{}{
 		"phone": m.Phone,
 	}
-	err := DataHandler.Debug().Table("admin_account").
+	err := DataHandler.Debug().Table("admin_accounts").
 		Select("*").
 		Where(cond).First(&m).Error
 	if err != nil {
