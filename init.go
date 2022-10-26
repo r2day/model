@@ -25,6 +25,7 @@ func InitDataBase(dsn string) error {
 	// 用户管理(用于管理当前系统的用户权限)
 	// 商户号申请
 	DataHandler.AutoMigrate(&MerchantApply{})
+	DataHandler.AutoMigrate(&AdminAccount{})
 
 	DataHandler.AutoMigrate(&User{})
 	// 品牌管理 (超级管理员权限)
