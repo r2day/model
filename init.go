@@ -26,6 +26,8 @@ func InitDataBase(dsn string) error {
 	// 商户号申请
 	DataHandler.AutoMigrate(&MerchantApply{})
 	DataHandler.AutoMigrate(&AdminAccount{})
+	// 增加会员帐户信息
+	DataHandler.AutoMigrate(&MemberInfo{})
 
 	DataHandler.AutoMigrate(&User{})
 	// 品牌管理 (超级管理员权限)
