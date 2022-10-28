@@ -33,6 +33,8 @@ type MerchantApply struct {
 	MerchantId string `json:"merchant_id"`
 	// 申请通过后生成的密钥
 	MerchantKey string `json:"merchant_key"`
+	// 政策
+	Policy string `json:"policy"`
 }
 
 // FindIfPhoneHasRegister 检查当前手机号是不是已经注册过
