@@ -22,7 +22,7 @@ type MemberInfo struct {
 	// CustomerId 客户编号
 	CustomerId string `json:"customer_id"`
 	// 手机号
-	Phone string `json:"phone"`
+	Phone string `json:"phone" gorm:"index:idx_phone,unique"`
 	// 姓名
 	Name string `json:"name"`
 	// 性别
@@ -76,4 +76,14 @@ type MemberInfo struct {
 // Save 保存实例
 func (m MemberInfo) Save() {
 	DataHandler.Create(&m)
+}
+
+// SaveCsvLine 保存实例
+func (m MemberInfo) SaveCsvLine(key, value string) {
+	// INSERT INTO `user_info` (`user_id`,`door_id`,`email`,`address`,`create_time`,`update_time`)
+	// VALUES
+	//(666,888,'test123@qq.com','北京市海淀区','2021-07-28 22:26:20.241','2021-07-28 22:26:20.241')
+	// ON DUPLICATE KEY UPDATE `email`=VALUES(`email`),`address`=VALUES(`address`),`update_time`=VALUES(`update_time`)
+	sql := "INSERT INTO member_infos (?) VALUES (?) ON DUPLICATE KEY UPDATE `phone`=VALUES(`phone`)"
+	DataHandler.Exec(sql, key, value)
 }
