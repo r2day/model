@@ -19,11 +19,11 @@ type MemberInfo struct {
 	UpdatedAt time.Time
 
 	// CardId 卡号
-	CardId string `json:"card_id"`
+	CardId string `json:"card_id" gorm:"index:idx_card_id,unique"`
 	// CustomerId 客户编号
 	CustomerId string `json:"customer_id"`
 	// 手机号
-	Phone string `json:"phone" gorm:"index:idx_phone,unique"`
+	Phone string `json:"phone"`
 	// 姓名
 	Name string `json:"name"`
 	// 性别
