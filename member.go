@@ -69,7 +69,7 @@ type MemberInfo struct {
 	EntityCardId string `json:"entity_card_id"`
 	// 开卡日期
 
-	CardCreatedDate time.Time `json:"card_created_date"`
+	CardCreatedDate string `json:"card_created_date"`
 	// 有效期
 	Expire string `json:"expire"`
 }
@@ -116,7 +116,7 @@ func (m MemberInfo) SaveALine(value []string) {
 	m.DebitLeftLimit, _ = strconv.ParseFloat(value[20], 64)
 	m.DebitUsedLimit, _ = strconv.ParseFloat(value[21], 64)
 	m.EntityCardId = value[22]
-	m.CardCreatedDate, _ = time.Parse("2006/01/02", value[23])
+	m.CardCreatedDate, = value[23]
 	m.Expire = value[24]
 
 	DataHandler.Create(&m)
