@@ -10,9 +10,9 @@ type MemberInfo struct {
 	// Id 自增唯一id
 	Id uint `json:"id" gorm:"unique"`
 	// MerchantId 商户ID (例如: 黄李记作为一个商户存在)
-	MerchantId string `json:"merchant_id"`
+	MerchantId string `json:"merchant_id" `
 	// Status 状态
-	Status string `gorm:"default:effected"`
+	Status string `gorm:"default:effected" gorm:"index:idx_status"`
 	// CreatedAt 创建时间
 	CreatedAt time.Time
 	// UpdatedAt 修改时间
@@ -23,7 +23,7 @@ type MemberInfo struct {
 	// CustomerId 客户编号
 	CustomerId string `json:"customer_id"`
 	// 手机号
-	Phone string `json:"phone"`
+	Phone string `json:"phone" gorm:"index:idx_phone,unique"`
 	// 姓名
 	Name string `json:"name"`
 	// 性别
@@ -131,7 +131,8 @@ func (m MemberInfo) SaveALine(value []string) {
 func (m MemberInfo) ListAll() ([]MemberInfo, error) {
 	instance := make([]MemberInfo, 0)
 	err := DataHandler.Table("member_infos").
-		Where("status = ?", m.Status).Find(&instance).Error
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Find(&instance).Error
 	if err != nil {
 		return nil, err
 	} else {
