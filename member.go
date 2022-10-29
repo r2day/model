@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strconv"
 	"time"
 )
 
@@ -86,4 +87,37 @@ func (m MemberInfo) SaveCsvLine(key, value string) {
 	// ON DUPLICATE KEY UPDATE `email`=VALUES(`email`),`address`=VALUES(`address`),`update_time`=VALUES(`update_time`)
 	sql := "INSERT INTO member_infos (?) VALUES (?) ON DUPLICATE KEY UPDATE `phone`=VALUES(`phone`)"
 	DataHandler.Exec(sql, key, value)
+}
+
+// SaveALine 保存实例
+func (m MemberInfo) SaveALine(value []string) {
+
+	m.CardId = value[0]
+	m.CustomerId = value[1]
+	m.Phone = value[2]
+	m.Name = value[3]
+	m.Gender = value[4]
+	m.BirthDay = value[5]
+	m.CardType = value[6]
+	m.CardStatus = value[7]
+	m.CardLevel = value[8]
+	m.CardFrom = value[9]
+	m.Balance, _ = strconv.ParseFloat(value[10], 64)
+	m.CashCharge, _ = strconv.ParseFloat(value[11], 64)
+	m.Freezing, _ = strconv.ParseFloat(value[12], 64)
+	m.Gift, _ = strconv.ParseFloat(value[13], 64)
+	m.Integral, _ = strconv.ParseUint(value[14], 10, 64)
+	m.TotalBalance, _ = strconv.ParseFloat(value[15], 64)
+	m.TotalBalanceCounter, _ = strconv.ParseUint(value[16], 10, 64)
+
+	m.TotalCumulativeConsumption, _ = strconv.ParseFloat(value[17], 64)
+	m.TotalCumulativeConsumptionCounter, _ = strconv.ParseUint(value[18], 10, 64)
+	m.DebitTotalLimit, _ = strconv.ParseFloat(value[19], 64)
+	m.DebitLeftLimit, _ = strconv.ParseFloat(value[20], 64)
+	m.DebitUsedLimit, _ = strconv.ParseFloat(value[21], 64)
+	m.EntityCardId = value[22]
+	m.CardCreatedDate, _ = time.Parse("2006/01/02", value[23])
+	m.Expire = value[24]
+
+	DataHandler.Create(&m)
 }
