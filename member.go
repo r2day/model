@@ -125,3 +125,17 @@ func (m MemberInfo) SaveALine(value []string) {
 
 	DataHandler.Create(&m)
 }
+
+// ListAll 获取所有数据
+// 以便管理员进行审核操作
+func (m MemberInfo) ListAll() ([]MemberInfo, error) {
+	instance := make([]MemberInfo, 0)
+	err := DataHandler.Table("member_infos").
+		Where("status = ?", m.Status).Find(&instance).Error
+	if err != nil {
+		return nil, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
