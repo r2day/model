@@ -72,6 +72,10 @@ type MemberInfo struct {
 	CardCreatedDate string `json:"card_created_date"`
 	// 有效期
 	Expire string `json:"expire"`
+	// From 来源
+	From string `json:"from"`
+	// Channel 渠道
+	Channel string `json:"channel"`
 }
 
 // Save 保存实例
