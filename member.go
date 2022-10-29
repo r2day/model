@@ -116,7 +116,7 @@ func (m MemberInfo) SaveALine(value []string) {
 	m.DebitLeftLimit, _ = strconv.ParseFloat(value[20], 64)
 	m.DebitUsedLimit, _ = strconv.ParseFloat(value[21], 64)
 	m.EntityCardId = value[22]
-	m.CardCreatedDate, = value[23]
+	m.CardCreatedDate = value[23]
 	m.Expire = value[24]
 
 	DataHandler.Create(&m)
