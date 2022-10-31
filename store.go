@@ -99,6 +99,12 @@ type StoreInfo struct {
 // SaveALine 保存实例
 func (m StoreInfo) SaveALine(value []string) {
 
+	// 因为经纬度包含了，（逗号），因此为27columns
+	// 否则可以忽略
+	if len(value) != 27 {
+		return
+	}
+
 	m.GroupId = value[0]
 	m.BrandName = value[1]
 	m.StoreName = value[2]
@@ -131,10 +137,9 @@ func (m StoreInfo) SaveALine(value []string) {
 	// 创建人
 	m.CreatedBy = value[23]
 
-	// 创建时间 value[24]
+	// 更新时间 value[24]
 	m.UpdatedBy = value[25]
 
-	// 更新时间 value[26]
 	// 分组名
 	m.StoreGroupName = value[27]
 	DataHandler.Create(&m)
