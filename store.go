@@ -138,3 +138,18 @@ func (m StoreInfo) SaveALine(value []string) {
 	m.StoreGroupName = value[26]
 	DataHandler.Create(&m)
 }
+
+// ListAll 获取所有数据
+// 以便管理员进行审核操作
+func (m StoreInfo) ListAll() ([]StoreInfo, error) {
+	instance := make([]StoreInfo, 0)
+	err := DataHandler.Table("store_infos").
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Find(&instance).Error
+	if err != nil {
+		return nil, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
