@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 )
 
@@ -124,7 +125,9 @@ func (m StoreInfo) SaveALine(value []string) {
 	m.SystemType = value[20]
 
 	// 地理位置
-	m.LatitudeLongitude = value[21] + value[22]
+	la := strings.Trim(value[21], `"`)
+	lg := strings.Trim(value[22], `"`)
+	m.LatitudeLongitude = la + "," + lg
 	// 创建人
 	m.CreatedBy = value[23]
 
