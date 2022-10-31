@@ -134,8 +134,9 @@ func (m StoreInfo) SaveALine(value []string) {
 	// 创建时间 value[24]
 	m.UpdatedBy = value[25]
 
+	// 更新时间 value[26]
 	// 分组名
-	m.StoreGroupName = value[26]
+	m.StoreGroupName = value[27]
 	DataHandler.Create(&m)
 }
 
