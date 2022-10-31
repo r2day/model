@@ -101,9 +101,9 @@ func (m StoreInfo) SaveALine(value []string) {
 
 	// 因为经纬度包含了，（逗号），因此为27columns
 	// 否则可以忽略
-	if len(value) != 27 {
-		return
-	}
+	//if len(value) != 27 {
+	//	return
+	//}
 
 	m.GroupId = value[0]
 	m.BrandName = value[1]
