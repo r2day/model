@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 // StoreModel 店铺信息
 type StoreModel struct {
@@ -55,7 +57,7 @@ type StoreInfo struct {
 	// UpdatedAt 修改人
 	UpdatedBy string `json:"updated_by"`
 
-	GroupName string `json:"group_name"`
+	GroupId   string `json:"group_id"`
 	BrandName string `json:"brand_name"`
 	StoreName string `json:"store_name"`
 	// StoreId store id
@@ -89,4 +91,42 @@ type StoreInfo struct {
 	BusinessMode string `json:"business_mode"`
 	// 系统类型
 	SystemType string `json:"system_type"`
+}
+
+// SaveALine 保存实例
+func (m StoreInfo) SaveALine(value []string) {
+
+	m.GroupId = value[0]
+	m.BrandName = value[1]
+	m.StoreName = value[2]
+	m.StoreId = value[3]
+	m.OrganizeId = value[4]
+	m.FinanceName = value[5]
+	m.FinanceId = value[6]
+	m.Tag = value[7]
+	m.ManageOrganize = value[8]
+
+	m.Country = value[9]
+	m.Province = value[10]
+	m.City = value[11]
+	m.Area = value[12]
+	m.Street = value[13]
+	m.Address = value[14]
+
+	m.Phone = value[15]
+	m.BBS = value[16]
+
+	m.BusinessHours = value[17]
+	m.StoreStatus = value[18]
+	m.BusinessMode = value[19]
+	m.SystemType = value[20]
+
+	// 创建人
+	// 创建-时间自动 value[21]
+	m.CreatedBy = value[22]
+
+	// 更新-时间自动 value[23]
+	m.UpdatedBy = value[24]
+
+	DataHandler.Create(&m)
 }
