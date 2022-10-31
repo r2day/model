@@ -29,6 +29,9 @@ func InitDataBase(dsn string) error {
 	// 增加会员帐户信息
 	DataHandler.AutoMigrate(&MemberInfo{})
 
+	// 店铺信息
+	DataHandler.AutoMigrate(&StoreInfo{})
+
 	DataHandler.AutoMigrate(&User{})
 	// 品牌管理 (超级管理员权限)
 	DataHandler.AutoMigrate(&Brand{})
