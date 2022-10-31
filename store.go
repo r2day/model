@@ -91,6 +91,8 @@ type StoreInfo struct {
 	BusinessMode string `json:"business_mode"`
 	// 系统类型
 	SystemType string `json:"system_type"`
+	// 分组
+	StoreGroupName string `json:"store_group_name"`
 }
 
 // SaveALine 保存实例
@@ -121,12 +123,15 @@ func (m StoreInfo) SaveALine(value []string) {
 	m.BusinessMode = value[19]
 	m.SystemType = value[20]
 
+	// 地理位置
+	m.LatitudeLongitude = value[21] + value[22]
 	// 创建人
-	// 创建-时间自动 value[21]
-	m.CreatedBy = value[22]
+	m.CreatedBy = value[23]
 
-	// 更新-时间自动 value[23]
-	m.UpdatedBy = value[24]
+	// 创建时间 value[24]
+	m.UpdatedBy = value[25]
 
+	// 分组名
+	m.StoreGroupName = value[26]
 	DataHandler.Create(&m)
 }
