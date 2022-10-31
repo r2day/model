@@ -140,7 +140,6 @@ func (m StoreInfo) SaveALine(value []string) {
 }
 
 // ListAll 获取所有数据
-// 以便管理员进行审核操作
 func (m StoreInfo) ListAll() ([]StoreInfo, error) {
 	instance := make([]StoreInfo, 0)
 	err := DataHandler.Table("store_infos").
