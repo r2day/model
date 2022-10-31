@@ -140,6 +140,7 @@ func (m StoreInfo) SaveALine(value []string) {
 }
 
 // ListAll 获取所有数据
+// 店铺信息
 func (m StoreInfo) ListAll() ([]StoreInfo, error) {
 	instance := make([]StoreInfo, 0)
 	err := DataHandler.Table("store_infos").
