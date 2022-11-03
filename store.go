@@ -159,3 +159,17 @@ func (m StoreInfo) ListAll() ([]StoreInfo, error) {
 		return instance, nil
 	}
 }
+
+// GetOne 获取单个店铺信息
+func (m StoreInfo) GetOne() (StoreInfo, error) {
+	instance := StoreInfo{}
+	err := DataHandler.Table("store_infos").
+		Where("status = ? and merchant_id = ? and store_id = ?", m.Status, m.MerchantId, m.StoreId).
+		First(&instance).Error
+	if err != nil {
+		return instance, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
