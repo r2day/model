@@ -184,6 +184,6 @@ func (m StoreInfo) GetMany(ids []string) ([]StoreInfo, error) {
 		return nil, err
 	} else {
 		// 保存成功可以进行消息通知操作
-		return nil, nil
+		return instance, nil
 	}
 }
