@@ -164,7 +164,7 @@ func (m StoreInfo) ListAll() ([]StoreInfo, error) {
 func (m StoreInfo) GetOne() (StoreInfo, error) {
 	instance := StoreInfo{}
 	err := DataHandler.Table("store_infos").
-		Where("status = ? and merchant_id = ? and store_id = ?", m.Status, m.MerchantId, m.StoreId).
+		Where("status = ? and merchant_id = ? and id = ?", m.Status, m.MerchantId, m.Id).
 		First(&instance).Error
 	if err != nil {
 		return instance, err
