@@ -177,7 +177,7 @@ func (m StoreInfo) GetOne() (StoreInfo, error) {
 // GetMany 获取指定的店铺信息
 func (m StoreInfo) GetMany(ids []string) ([]StoreInfo, error) {
 	instance := make([]StoreInfo, 0)
-	err := DataHandler.Table("store_infos").
+	err := DataHandler.Debug().Table("store_infos").
 		Where("status = ? and merchant_id = ? and store_id IN ?", m.Status, m.MerchantId, ids).
 		Find(&instance).Error
 	if err != nil {
