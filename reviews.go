@@ -54,7 +54,7 @@ func (m CustomerReviews) GetOne() (CustomerReviews, error) {
 // Update 更新
 func (m CustomerReviews) Update() error {
 	instance := CustomerReviews{}
-	err := DataHandler.Model(&instance).Select("ReviewStatus", "Comment", "Rating").Omit("CreatedAt").Update(m)
+	err := DataHandler.Model(&instance).Select("ReviewStatus", "Comment", "Rating").Omit("CreatedAt").Update(m).Error
 	if err != nil {
 		return err
 	} else {
