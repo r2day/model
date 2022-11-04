@@ -32,6 +32,7 @@ func InitDataBase(dsn string) error {
 	// 店铺信息
 	DataHandler.AutoMigrate(&StoreInfo{})
 	DataHandler.AutoMigrate(&StoreGroupInfo{})
+	DataHandler.AutoMigrate(&CustomerReviews{})
 
 	DataHandler.AutoMigrate(&User{})
 	// 品牌管理 (超级管理员权限)
