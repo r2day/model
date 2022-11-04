@@ -36,3 +36,17 @@ func (m CustomerReviews) ListAll() ([]CustomerReviews, error) {
 		return instance, nil
 	}
 }
+
+// GetOne 获取单个详情
+func (m CustomerReviews) GetOne() (CustomerReviews, error) {
+	instance := CustomerReviews{}
+	err := DataHandler.Table("customer_reviews").
+		Where("status = ? and merchant_id = ? and id = ?", m.Status, m.MerchantId, m.Id).
+		First(&instance).Error
+	if err != nil {
+		return instance, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
