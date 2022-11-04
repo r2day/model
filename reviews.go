@@ -20,6 +20,9 @@ type CustomerReviews struct {
 	Rating       int    `json:"rating"`
 	Comment      string `json:"comment"`
 	ReviewStatus string `json:"review_status"`
+	CustomerName string `json:"customer_name"`
+	ProductId    string `json:"product_id"`
+	ProductName  string `json:"product_name"`
 }
 
 // ListAll 获取所有数据
@@ -52,10 +55,10 @@ func (m CustomerReviews) GetOne() (CustomerReviews, error) {
 }
 
 // Update 更新
-func (m CustomerReviews) Update(u CustomerReviews) error {
+func (m CustomerReviews) Update(u CustomerReviews, columns []string) error {
 	//instance := CustomerReviews{}
 	err := DataHandler.Debug().Model(&m).
-		Select("ReviewStatus", "Comment", "Rating").
+		Select(columns).
 		Omit("CreatedAt").Where("status = ? and merchant_id = ? and id = ?",
 		m.Status, m.MerchantId, m.Id).
 		Updates(u).Error
