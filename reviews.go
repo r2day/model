@@ -52,9 +52,13 @@ func (m CustomerReviews) GetOne() (CustomerReviews, error) {
 }
 
 // Update 更新
-func (m CustomerReviews) Update() error {
+func (m CustomerReviews) Update(u CustomerReviews) error {
 	//instance := CustomerReviews{}
-	err := DataHandler.Debug().Model(&m).Select("ReviewStatus", "Comment", "Rating").Omit("CreatedAt").Updates(m).Error
+	err := DataHandler.Debug().Model(&m).
+		Select("ReviewStatus", "Comment", "Rating").
+		Omit("CreatedAt").Where("status = ? and merchant_id = ? and id = ?",
+		m.Status, m.MerchantId, m.Id).
+		Updates(u).Error
 	if err != nil {
 		return err
 	} else {
