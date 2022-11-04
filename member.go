@@ -140,3 +140,17 @@ func (m MemberInfo) ListAll() ([]MemberInfo, error) {
 		return instance, nil
 	}
 }
+
+// GetMany 获取指定的客户信息
+func (m MemberInfo) GetMany(ids []string) ([]MemberInfo, error) {
+	instance := make([]MemberInfo, 0)
+	err := DataHandler.Debug().Table("member_infos").
+		Where("status = ? and merchant_id = ? and id IN ?", m.Status, m.MerchantId, ids).
+		Find(&instance).Error
+	if err != nil {
+		return nil, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
