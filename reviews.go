@@ -50,3 +50,15 @@ func (m CustomerReviews) GetOne() (CustomerReviews, error) {
 		return instance, nil
 	}
 }
+
+// Update 更新
+func (m CustomerReviews) Update() error {
+	instance := CustomerReviews{}
+	err := DataHandler.Model(&instance).Select("ReviewStatus", "Comment", "Rating").Omit("CreatedAt").Update(m)
+	if err != nil {
+		return err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return nil
+	}
+}
