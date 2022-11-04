@@ -116,7 +116,7 @@ type StoreGroupInfo struct {
 
 	GroupId   string `json:"group_id"`
 	BrandName string `json:"brand_name"`
-	GroupName string `json:"store_name"`
+	GroupName string `json:"group_name"`
 }
 
 // SaveALine 保存实例
