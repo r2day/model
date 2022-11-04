@@ -96,6 +96,29 @@ type StoreInfo struct {
 	StoreGroupName string `json:"store_group_name"`
 }
 
+// StoreGroupInfo 门店信息
+type StoreGroupInfo struct {
+	// Id 自增唯一id
+	Id uint `json:"id" gorm:"unique"`
+	// MerchantId 商户ID (例如: 黄李记作为一个商户存在)
+	MerchantId string `json:"merchant_id" gorm:"index:idx_merchant"`
+	// Status 状态
+	Status string `gorm:"default:effected" gorm:"index:idx_status"`
+	// CreatedAt 创建时间
+	CreatedAt time.Time
+	// UpdatedAt 修改时间
+	UpdatedAt time.Time
+
+	// CreatedAt 创建人
+	CreatedBy string `json:"created_by"`
+	// UpdatedAt 修改人
+	UpdatedBy string `json:"updated_by"`
+
+	GroupId   string `json:"group_id"`
+	BrandName string `json:"brand_name"`
+	GroupName string `json:"store_name"`
+}
+
 // SaveALine 保存实例
 func (m StoreInfo) SaveALine(value []string) {
 
@@ -179,6 +202,21 @@ func (m StoreInfo) GetMany(ids []string) ([]StoreInfo, error) {
 	instance := make([]StoreInfo, 0)
 	err := DataHandler.Debug().Table("store_infos").
 		Where("status = ? and merchant_id = ? and store_id IN ?", m.Status, m.MerchantId, ids).
+		Find(&instance).Error
+	if err != nil {
+		return nil, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
+
+// ListAll 获取所有数据
+// 店铺信息
+func (m StoreGroupInfo) ListAll() ([]StoreGroupInfo, error) {
+	instance := make([]StoreGroupInfo, 0)
+	err := DataHandler.Table("store_group_infos").
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
 		Find(&instance).Error
 	if err != nil {
 		return nil, err
