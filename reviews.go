@@ -62,3 +62,16 @@ func (m CustomerReviews) Update() error {
 		return nil
 	}
 }
+
+// Delete 删除
+func (m CustomerReviews) Delete() error {
+	err := DataHandler.Debug().Where("merchant_id = ? and status = ? and id = ?",
+		m.MerchantId, m.Status, m.Id).Delete(&m).Error
+
+	if err != nil {
+		return err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return nil
+	}
+}
