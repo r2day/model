@@ -154,3 +154,17 @@ func (m MemberInfo) GetMany(ids []string) ([]MemberInfo, error) {
 		return instance, nil
 	}
 }
+
+// GetOne 获取单个详情
+func (m MemberInfo) GetOne() (MemberInfo, error) {
+	instance := MemberInfo{}
+	err := DataHandler.Table("member_infos").
+		Where("status = ? and merchant_id = ? and id = ?", m.Status, m.MerchantId, m.Id).
+		First(&instance).Error
+	if err != nil {
+		return instance, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, nil
+	}
+}
