@@ -141,6 +141,34 @@ func (m MemberInfo) ListAll() ([]MemberInfo, error) {
 	}
 }
 
+// ListAllByOffset 获取所有数据
+// 以便管理员进行审核操作
+func (m MemberInfo) ListAllByOffset(offset int, limit int) ([]MemberInfo, int64, error) {
+	instance := make([]MemberInfo, 0)
+
+	var counter int64 = 0
+
+	err := DataHandler.Table("member_infos").
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Count(&counter).Error
+	if err != nil {
+		return nil, 0, err
+	} else if counter == 0 {
+		return nil, 0, nil
+	}
+
+	// 获取列表
+	err = DataHandler.Table("member_infos").
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Find(&instance).Offset(offset).Limit(limit).Error
+	if err != nil {
+		return nil, 0, err
+	} else {
+		// 保存成功可以进行消息通知操作
+		return instance, counter, nil
+	}
+}
+
 // GetMany 获取指定的客户信息
 func (m MemberInfo) GetMany(ids []string) ([]MemberInfo, error) {
 	instance := make([]MemberInfo, 0)
