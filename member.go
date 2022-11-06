@@ -160,7 +160,8 @@ func (m MemberInfo) ListAllByOffset(offset int, limit int) ([]MemberInfo, int64,
 	// 获取列表
 	err = DataHandler.Table("member_infos").Debug().
 		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
-		Find(&instance).Offset(offset).Limit(limit).Error
+		Offset(offset).Limit(limit).
+		Find(&instance).Error
 	if err != nil {
 		return nil, 0, err
 	} else {
