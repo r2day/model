@@ -76,6 +76,9 @@ type MemberInfo struct {
 	From string `json:"from"`
 	// Channel 渠道
 	Channel string `json:"channel"`
+
+	// Avatar 头像地址
+	Avatar string `json:"avatar"`
 }
 
 // Save 保存实例
