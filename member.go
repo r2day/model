@@ -77,8 +77,12 @@ type MemberInfo struct {
 	// Channel 渠道
 	Channel string `json:"channel"`
 
-	// Avatar 头像地址
+	// Avatar 头像基本地址
+	// 例如: https://avatar.r2day.club/<customer_id>/64x64
 	Avatar string `json:"avatar"`
+	// Segments 分类标签
+	// 逗号分隔的数据
+	Segments string `json:"segments"`
 }
 
 // Save 保存实例
