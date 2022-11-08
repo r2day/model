@@ -31,7 +31,7 @@ func (m CustomerGroups) All(instance interface{}) error {
 func (m CustomerGroups) MarshalJSON() ([]byte, error) {
 	// 命名别名，避免MarshalJson死循环
 	type Alias CustomerGroups
-	if m.Segments == "" {
+	if m.Segments != "" {
 		m.Groups = strings.Split(m.Segments, ",")
 	} else {
 		m.Groups = make([]string, 0)
