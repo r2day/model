@@ -1,10 +1,17 @@
 package model
 
+import (
+	"encoding/json"
+	"strings"
+)
+
 // CustomerGroups 客户分组
 type CustomerGroups struct {
 	BaseModel
 
-	Name string `json:"name" gorm:"index:name"`
+	Name     string   `json:"name" gorm:"index:name"`
+	Segments string   `json:"segments"`
+	Groups   []string `json:"groups" gorm:"-"`
 }
 
 // Save 保存实例
@@ -19,4 +26,13 @@ func (m CustomerGroups) All(instance interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func (m CustomerGroups) MarshalJSON() ([]byte, error) {
+	// 命名别名，避免MarshalJson死循环
+	type Alias CustomerGroups
+	m.Groups = strings.Split(m.Segments, ",")
+	return json.Marshal(struct {
+		Alias
+	}{Alias(m)})
 }
