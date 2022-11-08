@@ -3,6 +3,10 @@ package model
 import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
+	"time"
 )
 
 var (
@@ -10,18 +14,32 @@ var (
 	DataHandler *gorm.DB
 	// err 订阅错误
 	err error
+
+	DeBugLogger = logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Microsecond, // Slow SQL threshold
+			LogLevel:                  logger.Silent,    // Log level
+			IgnoreRecordNotFoundError: true,             // Ignore ErrRecordNotFound error for logger
+			Colorful:                  false,            // Disable color
+		},
+	)
 )
 
 // InitDataBase 初始化数据库
-func InitDataBase(dsn string) error {
+func InitDataBase(dsn string, p logger.Interface) error {
 	var err error
-	DataHandler, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DataHandler, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: p,
+	})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	// 注册model
 	// 自动同步数据库模型
+	DataHandler.AutoMigrate(&CustomerGroups{})
+
 	// 用户管理(用于管理当前系统的用户权限)
 	// 商户号申请
 	DataHandler.AutoMigrate(&MerchantApply{})
