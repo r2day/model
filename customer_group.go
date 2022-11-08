@@ -13,8 +13,8 @@ func (m CustomerGroups) Save() {
 }
 
 // All 获取所有数据
-func (m CustomerGroups) All(instance []CustomerGroups) error {
-	err := m.all("customer_groups", &instance)
+func (m CustomerGroups) All(instance interface{}) error {
+	err := m.all("customer_groups", instance)
 	if err != nil {
 		return err
 	}
