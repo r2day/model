@@ -28,7 +28,7 @@ func (m BaseModel) save(instance interface{}) {
 // all 获取所有数据
 func (m BaseModel) all(table string, instance interface{}) error {
 	//instance := make([]BaseModel, 0)
-	err := DataHandler.Table(table).
+	err := DataHandler.Table(table).Debug().
 		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
 		Find(instance).Error
 	if err != nil {
