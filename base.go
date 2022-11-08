@@ -36,3 +36,51 @@ func (m BaseModel) all(table string, instance interface{}) error {
 	}
 	return nil
 }
+
+// listByOffset 根据分页规则获取所有数据
+func (m BaseModel) listByOffset(table string,
+	instance interface{}, offset int, limit int) error {
+	err := DataHandler.Table(table).Debug().
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Offset(offset).Limit(limit).
+		Find(instance).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// counter 获取数据记录数
+func (m BaseModel) counter(table string, counter *int64) error {
+	err := DataHandler.Table(table).Debug().
+		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Count(counter).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetMany 获取指定的客户信息
+func (m BaseModel) getMany(table string, ids []string, instance interface{}) error {
+	err := DataHandler.Debug().Table(table).
+		Where("status = ? and merchant_id = ? and id IN ?",
+			m.Status, m.MerchantId, ids).
+		Find(instance).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetOne 获取单个详情
+func (m BaseModel) getOne(table string, instance interface{}) error {
+	err := DataHandler.Table(table).
+		Where("status = ? and merchant_id = ? and id = ?",
+			m.Status, m.MerchantId, m.Id).
+		First(&instance).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

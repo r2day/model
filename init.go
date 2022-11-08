@@ -39,6 +39,7 @@ func InitDataBase(dsn string, p logger.Interface) error {
 	// 注册model
 	// 自动同步数据库模型
 	DataHandler.AutoMigrate(&CustomerGroups{})
+	DataHandler.AutoMigrate(&Customers{})
 
 	// 用户管理(用于管理当前系统的用户权限)
 	// 商户号申请
