@@ -10,7 +10,7 @@ type CustomerGroups struct {
 	BaseModel
 
 	Name     string   `json:"name" gorm:"index:name"`
-	Segments string   `json:"segments"`
+	Segments string   `json:"-"`
 	Groups   []string `json:"groups" gorm:"-"`
 }
 
@@ -31,7 +31,11 @@ func (m CustomerGroups) All(instance interface{}) error {
 func (m CustomerGroups) MarshalJSON() ([]byte, error) {
 	// 命名别名，避免MarshalJson死循环
 	type Alias CustomerGroups
-	m.Groups = strings.Split(m.Segments, ",")
+	if m.Segments == "" {
+		m.Groups = strings.Split(m.Segments, ",")
+	} else {
+		m.Groups = make([]string, 0)
+	}
 	return json.Marshal(struct {
 		Alias
 	}{Alias(m)})
