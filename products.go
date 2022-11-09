@@ -1,19 +1,21 @@
 package model
 
-import "time"
+// products
+//id: integer
+
+//category_id: integer
+//reference: string
+//width: float
+//height: float
+//price: float
+//thumbnail: string
+//image: string
+//description: string
+//stock: integer
 
 // Products 产品信息
 type Products struct {
-	// Id 自增唯一id
-	Id uint `json:"id" gorm:"unique"`
-	// MerchantId 商户ID (例如: 黄李记作为一个商户存在)
-	MerchantId string `json:"merchant_id" gorm:"index:idx_merchant"`
-	// Status 状态
-	Status string `gorm:"default:effected" gorm:"index:idx_status"`
-	// CreatedAt 创建时间
-	CreatedAt time.Time
-	// UpdatedAt 修改时间
-	UpdatedAt time.Time
+	BaseModel
 
 	CategoryId  int     `json:"category_id"`
 	Reference   string  `json:"reference"`
@@ -26,31 +28,41 @@ type Products struct {
 	Stock       string  `json:"stock"`
 }
 
-// ListAll 获取所有数据
-// 店铺信息
-func (m Products) ListAll() ([]Products, error) {
-	instance := make([]Products, 0)
-	err := DataHandler.Table("products").
-		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
-		Find(&instance).Error
+// All 获取所有数据
+func (m Products) All(instance interface{}) error {
+	err := m.all("products", instance)
 	if err != nil {
-		return nil, err
-	} else {
-		// 保存成功可以进行消息通知操作
-		return instance, nil
+		return err
 	}
+	return nil
 }
 
-// GetOne 获取单个详情
-func (m Products) GetOne() (Products, error) {
-	instance := Products{}
-	err := DataHandler.Table("products").
-		Where("status = ? and merchant_id = ? and id = ?", m.Status, m.MerchantId, m.Id).
-		First(&instance).Error
+// ListByOffset 获取所有数据
+// 以便管理员进行审核操作
+func (m Products) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
+	var counter int64 = 0
+
+	err := m.counter("products", &counter)
 	if err != nil {
-		return instance, err
-	} else {
-		// 保存成功可以进行消息通知操作
-		return instance, nil
+		return 0, err
+	} else if counter == 0 {
+		return 0, nil
 	}
+
+	// 获取列表
+	err = m.listByOffset("products", instance, offset, limit)
+	if err != nil {
+		return 0, err
+	}
+	return counter, nil
+}
+
+// GetOne 获取单个数据
+// 以便管理员进行审核操作
+func (m Products) GetOne(instance interface{}) error {
+	err := m.getOne("products", instance)
+	if err != nil {
+		return err
+	}
+	return nil
 }
