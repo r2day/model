@@ -122,3 +122,16 @@ func (m BaseModel) delete(table string) error {
 	}
 	return nil
 }
+
+// update 更新一条记录
+func (m BaseModel) update(table string, newOne interface{}, columns []string) error {
+	err := DataHandler.Table(table).
+		Select(columns).
+		Where("base_status = ? and merchant_id = ? and id = ?",
+			m.BaseStatus, m.MerchantId, m.Id).
+		Updates(newOne).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
