@@ -61,6 +61,17 @@ func (m BaseModel) counter(table string, counter *int64) error {
 	return nil
 }
 
+// counter 获取数据记录数
+func (m BaseModel) counterByFilter(table string, counter *int64, filter string, filterParams interface{}) error {
+	err := DataHandler.Table(table).Debug().
+		Where("base_status = ? and merchant_id = ?"+filter, m.BaseStatus, m.MerchantId, filterParams).
+		Count(counter).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetMany 获取指定的客户信息
 func (m BaseModel) getMany(table string, ids []string, instance interface{}) error {
 	err := DataHandler.Table(table).

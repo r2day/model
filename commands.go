@@ -40,7 +40,7 @@ type Product struct {
 // Commands 订单信息
 /*
 INSERT INTO commands(merchant_id,customer_id,reference,total_ex_taxes,delivery_fees,tax_rate,taxes,total,baskets,status,returned)
- VALUE("M1586394958510690304", 2, "o001", 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1001,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":1002,\"quantity\":2,\"unit_price\":3.2}]", "ordered", 0);
+ VALUE("M1586394958510690304", 2, "o003", 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1001,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":1002,\"quantity\":2,\"unit_price\":3.2}]", "ordered", 0);
 
 
 */
@@ -126,16 +126,16 @@ func (m Commands) GetOne(instance interface{}) error {
 func (m Commands) ListByFilterOffset(instance interface{}, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
-	err := m.counter("commands", &counter)
+	filter := "and status = ?"
+	filterParams := make([]string, 0)
+	filterParams = append(filterParams, m.Status)
+
+	err := m.counterByFilter("commands", &counter, filter, filterParams)
 	if err != nil {
 		return 0, err
 	} else if counter == 0 {
 		return 0, nil
 	}
-
-	filter := "and status = ?"
-	filterParams := make([]string, 0)
-	filterParams = append(filterParams, m.Status)
 	// 获取列表
 	err = m.listByFilterOffset("commands", instance, offset, limit, filter, filterParams)
 	if err != nil {
