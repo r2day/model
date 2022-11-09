@@ -34,7 +34,7 @@ type Product struct {
 	// 商品数量
 	Quantity uint `json:"quantity"`
 	// 商品单价
-	UnitPrice uint `json:"unit_price"`
+	UnitPrice float64 `json:"unit_price"`
 }
 
 // Commands 订单信息
