@@ -109,3 +109,13 @@ func (m Customers) ListByOffset(instance interface{}, offset int, limit int) (in
 	}
 	return counter, nil
 }
+
+// GetOne 获取单个数据
+// 以便管理员进行审核操作
+func (m Customers) GetOne(instance interface{}) error {
+	err := m.getOne("customers", instance)
+	if err != nil {
+		return err
+	}
+	return nil
+}
