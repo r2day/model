@@ -126,7 +126,7 @@ func (m Commands) GetOne(instance interface{}) error {
 func (m Commands) ListByFilterOffset(instance interface{}, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
-	filter := "and status = ?"
+	filter := " and status = ?"
 	filterParams := make([]string, 0)
 	filterParams = append(filterParams, m.Status)
 
