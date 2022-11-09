@@ -40,7 +40,7 @@ type Product struct {
 // Commands 订单信息
 /*
 INSERT INTO commands(merchant_id,customer_id,reference,total_ex_taxes,delivery_fees,tax_rate,taxes,total,baskets,status,returned)
- VALUE("M1586394958510690304", 2, "o003", 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1001,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":1002,\"quantity\":2,\"unit_price\":3.2}]", "ordered", 0);
+ VALUE("M1586394958510690304", 2, 2, 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":2,\"quantity\":2,\"unit_price\":3.2}]", "delivered", 0);
 
 
 */
@@ -142,4 +142,13 @@ func (m Commands) ListByFilterOffset(instance interface{}, offset int, limit int
 		return 0, err
 	}
 	return counter, nil
+}
+
+// Delete 删除记录
+func (m Commands) Delete() error {
+	err := m.delete("commands")
+	if err != nil {
+		return err
+	}
+	return nil
 }

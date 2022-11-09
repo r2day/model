@@ -110,3 +110,15 @@ func (m BaseModel) listByFilterOffset(table string,
 	}
 	return nil
 }
+
+// delete 删除一条记录
+func (m BaseModel) delete(table string) error {
+	err := DataHandler.Table(table).
+		Where("base_status = ? and merchant_id = ? and id = ?",
+			m.BaseStatus, m.MerchantId, m.Id).
+		Delete(&m).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
