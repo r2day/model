@@ -120,3 +120,26 @@ func (m Commands) GetOne(instance interface{}) error {
 	}
 	return nil
 }
+
+// ListByFilterOffset 获取所有数据
+// 以便管理员进行审核操作
+func (m Commands) ListByFilterOffset(instance interface{}, offset int, limit int) (int64, error) {
+	var counter int64 = 0
+
+	err := m.counter("commands", &counter)
+	if err != nil {
+		return 0, err
+	} else if counter == 0 {
+		return 0, nil
+	}
+
+	filter := "and status = ?"
+	filterParams := make([]string, 0)
+	filterParams = append(filterParams, m.Status)
+	// 获取列表
+	err = m.listByFilterOffset("commands", instance, offset, limit, filter, filterParams)
+	if err != nil {
+		return 0, err
+	}
+	return counter, nil
+}

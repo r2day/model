@@ -84,3 +84,18 @@ func (m BaseModel) getOne(table string, instance interface{}) error {
 	}
 	return nil
 }
+
+// listByOffset 根据分页规则获取所有数据
+// filter: "and status = ?"
+// filterParams 字段列表
+func (m BaseModel) listByFilterOffset(table string,
+	instance interface{}, offset int, limit int, filter string, filterParams interface{}) error {
+	err := DataHandler.Table(table).Debug().
+		Where("base_status = ? and merchant_id = ?"+filter, m.BaseStatus, m.MerchantId, filterParams).
+		Offset(offset).Limit(limit).
+		Find(instance).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
