@@ -27,6 +27,7 @@ type BaseFee struct {
 }
 
 // Product 商品
+// [{ "product_id": 1001, "quantity": 1, "unit_price": 1.2 }, { "product_id": 1002, "quantity": 2, "unit_price": 3.2 }]
 type Product struct {
 	// 商品id
 	ProductId uint `json:"product_id"`
@@ -37,6 +38,13 @@ type Product struct {
 }
 
 // Commands 订单信息
+/*
+INSERT INTO commands(merchant_id,customer_id,reference,total_ex_taxes,delivery_fees,tax_rate,taxes,total,baskets,status,returned)
+ VALUE("M1586394958510690304", 2, "o001", 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1001,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":1002,\"quantity\":2,\"unit_price\":3.2}]", "delivered", 0);
+
+
+*/
+
 type Commands struct {
 	BaseModel
 
@@ -55,6 +63,7 @@ type Commands struct {
 	Basket []Product `json:"basket" gorm:"-"`
 
 	// 订单状态
+	// status: 'ordered' | 'delivered' | 'canceled'
 	Status string `json:"status"`
 	// 是否为退款
 	Returned bool `json:"returned"`
@@ -63,7 +72,7 @@ type Commands struct {
 func (m Commands) MarshalJSON() ([]byte, error) {
 	// 命名别名，避免MarshalJson死循环
 	type AliasCommands Commands
-	err := json.Unmarshal([]byte(m.Baskets), m.Basket)
+	err := json.Unmarshal([]byte(m.Baskets), &m.Basket)
 	if err != nil {
 		return nil, err
 	}
