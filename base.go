@@ -10,8 +10,8 @@ type BaseModel struct {
 	// MerchantId 商户ID (例如: 黄李记作为一个商户存在)
 	MerchantId string `json:"merchant_id" gorm:"index:idx_merchant"`
 
-	// Status 状态
-	Status string `gorm:"default:effected" gorm:"index:idx_status"`
+	// BaseStatus 基本状态
+	BaseStatus string `json:"base_status" gorm:"default:effected" gorm:"index:idx_base_status"`
 
 	// CreatedAt 创建时间
 	CreatedAt time.Time `json:"created_at"`
@@ -29,7 +29,7 @@ func (m BaseModel) save(instance interface{}) {
 func (m BaseModel) all(table string, instance interface{}) error {
 	//instance := make([]BaseModel, 0)
 	err := DataHandler.Table(table).Debug().
-		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Where("base_status = ? and merchant_id = ?", m.BaseStatus, m.MerchantId).
 		Find(instance).Error
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (m BaseModel) all(table string, instance interface{}) error {
 func (m BaseModel) listByOffset(table string,
 	instance interface{}, offset int, limit int) error {
 	err := DataHandler.Table(table).Debug().
-		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Where("base_status = ? and merchant_id = ?", m.BaseStatus, m.MerchantId).
 		Offset(offset).Limit(limit).
 		Find(instance).Error
 	if err != nil {
@@ -53,7 +53,7 @@ func (m BaseModel) listByOffset(table string,
 // counter 获取数据记录数
 func (m BaseModel) counter(table string, counter *int64) error {
 	err := DataHandler.Table(table).Debug().
-		Where("status = ? and merchant_id = ?", m.Status, m.MerchantId).
+		Where("base_status = ? and merchant_id = ?", m.BaseStatus, m.MerchantId).
 		Count(counter).Error
 	if err != nil {
 		return err
@@ -64,8 +64,8 @@ func (m BaseModel) counter(table string, counter *int64) error {
 // GetMany 获取指定的客户信息
 func (m BaseModel) getMany(table string, ids []string, instance interface{}) error {
 	err := DataHandler.Table(table).
-		Where("status = ? and merchant_id = ? and id IN ?",
-			m.Status, m.MerchantId, ids).
+		Where("base_status = ? and merchant_id = ? and id IN ?",
+			m.BaseStatus, m.MerchantId, ids).
 		Find(instance).Error
 	if err != nil {
 		return err
@@ -76,8 +76,8 @@ func (m BaseModel) getMany(table string, ids []string, instance interface{}) err
 // GetOne 获取单个详情
 func (m BaseModel) getOne(table string, instance interface{}) error {
 	err := DataHandler.Table(table).
-		Where("status = ? and merchant_id = ? and id = ?",
-			m.Status, m.MerchantId, m.Id).
+		Where("base_status = ? and merchant_id = ? and id = ?",
+			m.BaseStatus, m.MerchantId, m.Id).
 		First(&instance).Error
 	if err != nil {
 		return err
