@@ -63,7 +63,7 @@ func (m BaseModel) counter(table string, counter *int64) error {
 
 // GetMany 获取指定的客户信息
 func (m BaseModel) getMany(table string, ids []string, instance interface{}) error {
-	err := DataHandler.Debug().Table(table).
+	err := DataHandler.Table(table).
 		Where("status = ? and merchant_id = ? and id IN ?",
 			m.Status, m.MerchantId, ids).
 		Find(instance).Error

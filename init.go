@@ -27,13 +27,17 @@ var (
 )
 
 // InitDataBase 初始化数据库
-func InitDataBase(dsn string, p logger.Interface) error {
+func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 	var err error
 	DataHandler, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: p,
 	})
 	if err != nil {
 		panic("failed to connect database")
+	}
+
+	if debug {
+		DataHandler = DataHandler.Debug()
 	}
 
 	// 注册model
