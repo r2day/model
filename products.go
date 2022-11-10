@@ -26,6 +26,8 @@ type Products struct {
 	Image       string  `json:"image"`
 	Description string  `json:"description"`
 	Stock       string  `json:"stock"`
+
+	Status string `json:"status"`
 }
 
 // All 获取所有数据
@@ -61,6 +63,38 @@ func (m Products) ListByOffset(instance interface{}, offset int, limit int) (int
 // 以便管理员进行审核操作
 func (m Products) GetOne(instance interface{}) error {
 	err := m.getOne("products", instance)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ListByFilterOffset 获取所有数据
+// 以便管理员进行审核操作
+func (m Products) ListByFilterOffset(instance interface{}, offset int, limit int) (int64, error) {
+	var counter int64 = 0
+
+	filter := " and status = ?"
+	filterParams := make([]string, 0)
+	filterParams = append(filterParams, m.Status)
+
+	err := m.counterByFilter("products", &counter, filter, filterParams)
+	if err != nil {
+		return 0, err
+	} else if counter == 0 {
+		return 0, nil
+	}
+	// 获取列表
+	err = m.listByFilterOffset("products", instance, offset, limit, filter, filterParams)
+	if err != nil {
+		return 0, err
+	}
+	return counter, nil
+}
+
+// Delete 删除记录
+func (m Products) Delete() error {
+	err := m.delete("products")
 	if err != nil {
 		return err
 	}
