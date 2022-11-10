@@ -47,6 +47,7 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 	DataHandler.AutoMigrate(&Commands{})
 	DataHandler.AutoMigrate(&Invoices{})
 	DataHandler.AutoMigrate(&Reviews{})
+	DataHandler.AutoMigrate(&Categories{})
 
 	// 用户管理(用于管理当前系统的用户权限)
 	// 商户号申请
