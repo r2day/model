@@ -79,3 +79,12 @@ func (m Categories) Delete() error {
 	}
 	return nil
 }
+
+// Update 更新
+func (m Categories) Update(newOne Categories, columns []string) error {
+	err := m.update("categories", newOne, columns)
+	if err != nil {
+		return err
+	}
+	return nil
+}
