@@ -1,23 +1,10 @@
 package model
 
-// products
-//id: integer
-
-//category_id: integer
-//reference: string
-//width: float
-//height: float
-//price: float
-//thumbnail: string
-//image: string
-//description: string
-//stock: integer
-
 // Products 产品信息
 type Products struct {
 	BaseModel
 
-	CategoryId  int     `json:"category_id"`
+	CategoryId  uint    `json:"category_id"`
 	Reference   string  `json:"reference"`
 	Width       float64 `json:"width"`
 	Height      float64 `json:"height"`
@@ -25,7 +12,7 @@ type Products struct {
 	Thumbnail   string  `json:"thumbnail"`
 	Image       string  `json:"image"`
 	Description string  `json:"description"`
-	Stock       string  `json:"stock"`
+	Stock       uint    `json:"stock"`
 
 	Status string `json:"status"`
 }
