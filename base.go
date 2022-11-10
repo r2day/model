@@ -1,6 +1,13 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
+
+const (
+	Sep = " and %s = ?"
+)
 
 // BaseModel 基本数据表模型
 type BaseModel struct {
@@ -97,10 +104,11 @@ func (m BaseModel) getOne(table string, instance interface{}) error {
 }
 
 // listByOffset 根据分页规则获取所有数据
-// filter: "and status = ?"
-// filterParams 字段列表
+// filter: ["status", "category_id"]
+// filterParams: ["pending", 5]
 func (m BaseModel) listByFilterOffset(table string,
-	instance interface{}, offset int, limit int, filter string, filterParams interface{}) error {
+	instance interface{}, offset int, limit int, filterColumns []string, filterParams interface{}) error {
+	filter := joinQueryFields(filterColumns)
 	err := DataHandler.Table(table).Debug().
 		Where("base_status = ? and merchant_id = ?"+filter, m.BaseStatus, m.MerchantId, filterParams).
 		Offset(offset).Limit(limit).
@@ -134,4 +142,19 @@ func (m BaseModel) update(table string, newOne interface{}, columns []string) er
 		return err
 	}
 	return nil
+}
+
+// joinQueryFields 拼接查询条件
+func joinQueryFields(columns []string) string {
+	final := ""
+	for _, name := range columns {
+		f := fmt.Sprintf(Sep, name)
+		final += f
+	}
+	return final
+}
+
+// JoinQueryFields 拼接查询条件
+func (m *BaseModel) JoinQueryFields(columns []string) string {
+	return joinQueryFields(columns)
 }
