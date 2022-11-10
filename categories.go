@@ -50,10 +50,9 @@ func (m Categories) GetOne(instance interface{}) error {
 
 // ListByFilterOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Categories) ListByFilterOffset(instance interface{}, offset int, limit int) (int64, error) {
+func (m Categories) ListByFilterOffset(instance interface{}, filter []string, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
-	filter := " and status = ?"
 	filterParams := make([]string, 0)
 	filterParams = append(filterParams, m.Status)
 

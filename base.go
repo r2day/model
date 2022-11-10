@@ -69,7 +69,8 @@ func (m BaseModel) counter(table string, counter *int64) error {
 }
 
 // counter 获取数据记录数
-func (m BaseModel) counterByFilter(table string, counter *int64, filter string, filterParams interface{}) error {
+func (m BaseModel) counterByFilter(table string, counter *int64, filterColumns []string, filterParams interface{}) error {
+	filter := joinQueryFields(filterColumns)
 	err := DataHandler.Table(table).Debug().
 		Where("base_status = ? and merchant_id = ?"+filter, m.BaseStatus, m.MerchantId, filterParams).
 		Count(counter).Error
