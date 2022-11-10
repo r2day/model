@@ -49,12 +49,8 @@ func (m Reviews) ListByOffset(instance interface{}, offset int, limit int) (int6
 
 // ListByFilterOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Reviews) ListByFilterOffset(instance interface{}, filter []string, offset int, limit int) (int64, error) {
+func (m Reviews) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
 	var counter int64 = 0
-
-	filterParams := make([]string, 0)
-	filterParams = append(filterParams, m.Status)
-
 	err := m.counterByFilter("reviews", &counter, filter, filterParams)
 	if err != nil {
 		return 0, err

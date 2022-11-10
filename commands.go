@@ -113,12 +113,8 @@ func (m Commands) GetOne(instance interface{}) error {
 
 // ListByFilterOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Commands) ListByFilterOffset(instance interface{}, filter []string, offset int, limit int) (int64, error) {
+func (m Commands) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
 	var counter int64 = 0
-
-	filterParams := make([]string, 0)
-	filterParams = append(filterParams, m.Status)
-
 	err := m.counterByFilter("commands", &counter, filter, filterParams)
 	if err != nil {
 		return 0, err
