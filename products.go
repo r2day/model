@@ -87,3 +87,12 @@ func (m Products) Delete() error {
 	}
 	return nil
 }
+
+// Update 更新
+func (m Products) Update(newOne Products, columns []string) error {
+	err := m.update("products", newOne, columns)
+	if err != nil {
+		return err
+	}
+	return nil
+}
