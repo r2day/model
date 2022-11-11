@@ -21,10 +21,10 @@ type BaseModel struct {
 	BaseStatus string `json:"base_status" gorm:"default:effected" gorm:"index:idx_base_status"`
 
 	// CreatedAt 创建时间
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"created_at" gorm:"column:created_at;autoCreateTime"`
 
 	// UpdatedAt 修改时间
-	UpdatedAt time.Time `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"  gorm:"column:updated_at;autoUpdateTime"`
 }
 
 // Save 保存实例
