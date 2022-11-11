@@ -137,3 +137,12 @@ func (m Commands) Delete() error {
 	}
 	return nil
 }
+
+// Update 更新
+func (m Commands) Update(newOne Commands, columns []string) error {
+	err := m.update("commands", newOne, columns)
+	if err != nil {
+		return err
+	}
+	return nil
+}
