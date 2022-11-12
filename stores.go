@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 )
 
@@ -76,8 +75,11 @@ func (m Stores) MarshalJSON() ([]byte, error) {
 	// 命名别名，避免MarshalJson死循环
 	type AliasStores Stores
 
-	m.BusinessHours = fmt.Sprintf("%s %s",
-		m.BusinessBeginHours, m.BusinessEndHours)
+	hours := strings.Split(m.BusinessHours, "-")
+	if len(hours) == 2 {
+		m.BusinessBeginHours = hours[0]
+		m.BusinessEndHours = hours[1]
+	}
 
 	return json.Marshal(struct {
 		AliasStores
