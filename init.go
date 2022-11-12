@@ -66,7 +66,7 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 
 		DataHandler.AutoMigrate(&User{})
 		// 品牌管理 (超级管理员权限)
-		DataHandler.AutoMigrate(&Brand{})
+		//DataHandler.AutoMigrate(&Brand{})
 		// 门店管理 (超级管理员权限)
 		DataHandler.AutoMigrate(&StoreModel{})
 		// 部门管理 (超级管理员权限)
