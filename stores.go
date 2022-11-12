@@ -1,6 +1,10 @@
 package model
 
-import "strings"
+import (
+	"encoding/json"
+	"fmt"
+	"strings"
+)
 
 type Position struct {
 	// 位置信息
@@ -18,6 +22,11 @@ type StoresInfo struct {
 	Phone string `json:"phone"`
 	// 公告
 	BBS string `json:"bbs"`
+
+	// 营业开始时间 (不存数据库)
+	BusinessBeginHours string `json:"business_begin_hours" gorm:"-"`
+	// 营业结束时间 (不存数据库)
+	BusinessEndHours string `json:"business_end_hours"  gorm:"-"`
 	// 营业时间
 	BusinessHours string `json:"business_hours"`
 	// 门店状态
@@ -61,6 +70,18 @@ type Stores struct {
 	SystemType string `json:"system_type"`
 	// 分组
 	StoreGroupName string `json:"store_group_name"`
+}
+
+func (m Stores) MarshalJSON() ([]byte, error) {
+	// 命名别名，避免MarshalJson死循环
+	type AliasStores Stores
+
+	m.BusinessHours = fmt.Sprintf("%s %s",
+		m.BusinessBeginHours, m.BusinessEndHours)
+
+	return json.Marshal(struct {
+		AliasStores
+	}{AliasStores(m)})
 }
 
 // SaveALine 保存实例
