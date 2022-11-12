@@ -28,8 +28,12 @@ type BaseModel struct {
 }
 
 // Save 保存实例
-func (m BaseModel) save(instance interface{}) {
-	DataHandler.Create(instance)
+func (m BaseModel) save(instance interface{}) error {
+	err := DataHandler.Create(instance).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // all 获取所有数据

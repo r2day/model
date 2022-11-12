@@ -180,6 +180,9 @@ func (m Stores) Delete() error {
 
 // Save 删除记录
 func (m Stores) Save() error {
-	m.save(&m)
+	err := m.save(&m)
+	if err != nil {
+		return err
+	}
 	return nil
 }
