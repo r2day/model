@@ -16,7 +16,7 @@ type StoreGroup struct {
 
 // ListByOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m StoreGroup) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
+func (m *StoreGroup) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
 	err := m.counter("store_groups", &counter)
@@ -36,7 +36,7 @@ func (m StoreGroup) ListByOffset(instance interface{}, offset int, limit int) (i
 
 // GetOne 获取单个数据
 // 以便管理员进行审核操作
-func (m StoreGroup) GetOne(instance interface{}) error {
+func (m *StoreGroup) GetOne(instance interface{}) error {
 	err := m.getOne("store_groups", instance)
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (m StoreGroup) GetOne(instance interface{}) error {
 }
 
 // Delete 删除记录
-func (m StoreGroup) Delete() error {
+func (m *StoreGroup) Delete() error {
 	err := m.delete("store_groups")
 	if err != nil {
 		return err
@@ -54,8 +54,8 @@ func (m StoreGroup) Delete() error {
 }
 
 // Save 删除记录
-func (m StoreGroup) Save() error {
-	err := m.save(&m)
+func (m *StoreGroup) Save() error {
+	err := m.save(m)
 	if err != nil {
 		return err
 	}

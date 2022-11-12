@@ -29,7 +29,8 @@ type BaseModel struct {
 
 // Save 保存实例
 func (m BaseModel) save(instance interface{}) error {
-	err := DataHandler.Create(instance).Error
+	handler := DataHandler.Create(instance)
+	err := handler.Error
 	if err != nil {
 		return err
 	}
