@@ -29,7 +29,7 @@ type BaseModel struct {
 
 // Save 保存实例
 func (m BaseModel) save(instance interface{}) {
-	DataHandler.Create(&instance)
+	DataHandler.Create(instance)
 }
 
 // all 获取所有数据
