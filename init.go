@@ -37,59 +37,61 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 	}
 
 	if debug {
+		// debug 模式下会创建表
 		DataHandler = DataHandler.Debug()
+
+		// 注册model
+		// 自动同步数据库模型
+		DataHandler.AutoMigrate(&CustomerGroups{})
+		DataHandler.AutoMigrate(&Customers{})
+		DataHandler.AutoMigrate(&Commands{})
+		DataHandler.AutoMigrate(&Invoices{})
+		DataHandler.AutoMigrate(&Reviews{})
+		DataHandler.AutoMigrate(&Categories{})
+		DataHandler.AutoMigrate(&Stores{})
+		DataHandler.AutoMigrate(&Menus{})
+
+		// 用户管理(用于管理当前系统的用户权限)
+		// 商户号申请
+		DataHandler.AutoMigrate(&MerchantApply{})
+		DataHandler.AutoMigrate(&AdminAccount{})
+		// 增加会员帐户信息
+		DataHandler.AutoMigrate(&MemberInfo{})
+		DataHandler.AutoMigrate(&Products{})
+
+		// 店铺信息
+		DataHandler.AutoMigrate(&StoreGroupInfo{})
+
+		DataHandler.AutoMigrate(&User{})
+		// 品牌管理 (超级管理员权限)
+		DataHandler.AutoMigrate(&Brand{})
+		// 门店管理 (超级管理员权限)
+		DataHandler.AutoMigrate(&StoreModel{})
+		// 部门管理 (超级管理员权限)
+		DataHandler.AutoMigrate(&Department{})
+		// 菜品分类
+		DataHandler.AutoMigrate(&Category{})
+		// 规格
+		DataHandler.AutoMigrate(&Unit{})
+		// 菜品库
+		DataHandler.AutoMigrate(&Dishes{})
+		// 菜品分组
+		DataHandler.AutoMigrate(&MenuGroup{})
+		// 菜品做法
+		DataHandler.AutoMigrate(&FormulaGroup{})
+		// 账号
+		DataHandler.AutoMigrate(&AccountInfo{})
+		// 账号
+		// DataHandler.AutoMigrate(&Cart{})
+		// 账号
+		DataHandler.AutoMigrate(&PaymentFlow{})
+		// 账号
+		DataHandler.AutoMigrate(&AddressModel{})
+
+		DataHandler.AutoMigrate(&Finance{})
+		// 账号
+		// DataHandler.AutoMigrate(&Order{})
+
 	}
-
-	// 注册model
-	// 自动同步数据库模型
-	DataHandler.AutoMigrate(&CustomerGroups{})
-	DataHandler.AutoMigrate(&Customers{})
-	DataHandler.AutoMigrate(&Commands{})
-	DataHandler.AutoMigrate(&Invoices{})
-	DataHandler.AutoMigrate(&Reviews{})
-	DataHandler.AutoMigrate(&Categories{})
-	DataHandler.AutoMigrate(&Stores{})
-	DataHandler.AutoMigrate(&Menus{})
-
-	// 用户管理(用于管理当前系统的用户权限)
-	// 商户号申请
-	DataHandler.AutoMigrate(&MerchantApply{})
-	DataHandler.AutoMigrate(&AdminAccount{})
-	// 增加会员帐户信息
-	DataHandler.AutoMigrate(&MemberInfo{})
-	DataHandler.AutoMigrate(&Products{})
-
-	// 店铺信息
-	DataHandler.AutoMigrate(&StoreGroupInfo{})
-
-	DataHandler.AutoMigrate(&User{})
-	// 品牌管理 (超级管理员权限)
-	DataHandler.AutoMigrate(&Brand{})
-	// 门店管理 (超级管理员权限)
-	DataHandler.AutoMigrate(&StoreModel{})
-	// 部门管理 (超级管理员权限)
-	DataHandler.AutoMigrate(&Department{})
-	// 菜品分类
-	DataHandler.AutoMigrate(&Category{})
-	// 规格
-	DataHandler.AutoMigrate(&Unit{})
-	// 菜品库
-	DataHandler.AutoMigrate(&Dishes{})
-	// 菜品分组
-	DataHandler.AutoMigrate(&MenuGroup{})
-	// 菜品做法
-	DataHandler.AutoMigrate(&FormulaGroup{})
-	// 账号
-	DataHandler.AutoMigrate(&AccountInfo{})
-	// 账号
-	// DataHandler.AutoMigrate(&Cart{})
-	// 账号
-	DataHandler.AutoMigrate(&PaymentFlow{})
-	// 账号
-	DataHandler.AutoMigrate(&AddressModel{})
-
-	DataHandler.AutoMigrate(&Finance{})
-	// 账号
-	// DataHandler.AutoMigrate(&Order{})
 	return nil
 }
