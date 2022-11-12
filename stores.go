@@ -44,6 +44,8 @@ type Stores struct {
 	GroupId string `json:"group_id"`
 	// BrandName 品牌名称
 	BrandName string `json:"brand_name"`
+	// BrandId 品牌ID
+	BrandId string `json:"brand_id"`
 	// StoreName 店铺名称
 	StoreName string `json:"store_name"`
 	// StoreId 门店id
