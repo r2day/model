@@ -10,7 +10,7 @@ type Categories struct {
 }
 
 // All 获取所有数据
-func (m Categories) All(instance interface{}) error {
+func (m *Categories) All(instance interface{}) error {
 	err := m.all("categories", instance)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func (m Categories) All(instance interface{}) error {
 
 // ListByOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Categories) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
+func (m *Categories) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
 	err := m.counter("categories", &counter)
@@ -40,7 +40,7 @@ func (m Categories) ListByOffset(instance interface{}, offset int, limit int) (i
 
 // GetOne 获取单个数据
 // 以便管理员进行审核操作
-func (m Categories) GetOne(instance interface{}) error {
+func (m *Categories) GetOne(instance interface{}) error {
 	err := m.getOne("categories", instance)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (m Categories) GetOne(instance interface{}) error {
 
 // ListByFilterOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Categories) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
+func (m *Categories) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 	err := m.counterByFilter("categories", &counter, filter, filterParams)
 	if err != nil {
@@ -67,7 +67,7 @@ func (m Categories) ListByFilterOffset(instance interface{}, filter []string, fi
 }
 
 // Delete 删除记录
-func (m Categories) Delete() error {
+func (m *Categories) Delete() error {
 	err := m.delete("categories")
 	if err != nil {
 		return err
@@ -76,8 +76,17 @@ func (m Categories) Delete() error {
 }
 
 // Update 更新
-func (m Categories) Update(newOne Categories, columns []string) error {
+func (m *Categories) Update(newOne Categories, columns []string) error {
 	err := m.update("categories", newOne, columns)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Save 保存
+func (m *Categories) Save() error {
+	err := m.save(m)
 	if err != nil {
 		return err
 	}
