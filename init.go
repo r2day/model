@@ -38,21 +38,31 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 
 	if debug {
 		// debug 模式下会创建表
+		// 首次调用（可以使用debug模式运行后产生表后，切换为release)
 		DataHandler = DataHandler.Debug()
 
 		// 注册model
 		// 自动同步数据库模型
+
+		// 客户相关
 		DataHandler.AutoMigrate(&CustomerGroups{})
 		DataHandler.AutoMigrate(&Customers{})
+
+		// 订单相关
 		DataHandler.AutoMigrate(&Commands{})
 		DataHandler.AutoMigrate(&Invoices{})
 		DataHandler.AutoMigrate(&Reviews{})
+
+		// 菜品相关
 		DataHandler.AutoMigrate(&Categories{})
-		DataHandler.AutoMigrate(&Stores{})
 		DataHandler.AutoMigrate(&Menus{})
-		DataHandler.AutoMigrate(&StoreGroup{})
+
+		// 门店相关
 		DataHandler.AutoMigrate(&Brands{})
 		DataHandler.AutoMigrate(&Finances{})
+		DataHandler.AutoMigrate(&Departments{})
+		DataHandler.AutoMigrate(&StoreGroup{})
+		DataHandler.AutoMigrate(&Stores{})
 
 		// 用户管理(用于管理当前系统的用户权限)
 		//// 商户号申请
