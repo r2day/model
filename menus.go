@@ -8,16 +8,16 @@ type MenuBase struct {
 	MenuId string `json:"menu_id"`
 
 	// POS 分类
-	PosCategoryId string `json:"pos_category_id"`
+	PosCategoryId uint `json:"pos_category_id"`
 	// 线上 分类
-	OnlineCategoryId string `json:"online_category_id"`
+	OnlineCategoryId uint `json:"online_category_id"`
 
 	// 收入科目
-	IncomeId string `json:"income_id"`
+	IncomeId uint `json:"income_id"`
 	// 出品部门
-	DepartmentId string `json:"department_id"`
+	DepartmentId uint `json:"department_id"`
 	// 品牌
-	BrandId string `json:"brand_id"`
+	BrandId uint `json:"brand_id"`
 }
 
 // MenuSpecification 规格
