@@ -1,7 +1,5 @@
 package model
 
-import "encoding/json"
-
 // 根据huanglj样本设计
 
 // MenuBase 菜单基本信息
@@ -100,10 +98,10 @@ type Menus struct {
 	MenuBase
 	// 菜品销售信息
 	MenuSales
-	// 存储序列化后的数据
-	Baskets string `json:"-"`
-	// 对外提供列表
-	Basket []MenuSpecification `json:"basket" gorm:"-"`
+	//// 存储序列化后的数据
+	//Baskets string `json:"-"`
+	//// 对外提供列表
+	//Basket []MenuSpecification `json:"basket" gorm:"-"`
 	// CreatedAt 创建人
 	CreatedBy string `json:"created_by"`
 	// UpdatedAt 修改人
@@ -112,18 +110,19 @@ type Menus struct {
 	Name string `json:"name"`
 }
 
-func (m Menus) MarshalJSON() ([]byte, error) {
-	// 命名别名，避免MarshalJson死循环
-	type AliasMenus Menus
-	err := json.Unmarshal([]byte(m.Baskets), &m.Basket)
-	if err != nil {
-		return nil, err
-	}
-
-	return json.Marshal(struct {
-		AliasMenus
-	}{AliasMenus(m)})
-}
+//
+//func (m Menus) MarshalJSON() ([]byte, error) {
+//	// 命名别名，避免MarshalJson死循环
+//	type AliasMenus Menus
+//	err := json.Unmarshal([]byte(m.Baskets), &m.Basket)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return json.Marshal(struct {
+//		AliasMenus
+//	}{AliasMenus(m)})
+//}
 
 // All 获取所有数据
 func (m Menus) All(instance interface{}) error {
@@ -136,7 +135,7 @@ func (m Menus) All(instance interface{}) error {
 
 // ListByOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Menus) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
+func (m *Menus) ListByOffset(instance interface{}, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 
 	err := m.counter("menus", &counter)
@@ -156,7 +155,7 @@ func (m Menus) ListByOffset(instance interface{}, offset int, limit int) (int64,
 
 // GetOne 获取单个数据
 // 以便管理员进行审核操作
-func (m Menus) GetOne(instance interface{}) error {
+func (m *Menus) GetOne(instance interface{}) error {
 	err := m.getOne("menus", instance)
 	if err != nil {
 		return err
@@ -166,7 +165,7 @@ func (m Menus) GetOne(instance interface{}) error {
 
 // ListByFilterOffset 获取所有数据
 // 以便管理员进行审核操作
-func (m Menus) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
+func (m *Menus) ListByFilterOffset(instance interface{}, filter []string, filterParams []string, offset int, limit int) (int64, error) {
 	var counter int64 = 0
 	err := m.counterByFilter("menus", &counter, filter, filterParams)
 	if err != nil {
@@ -183,8 +182,17 @@ func (m Menus) ListByFilterOffset(instance interface{}, filter []string, filterP
 }
 
 // Delete 删除记录
-func (m Menus) Delete() error {
+func (m *Menus) Delete() error {
 	err := m.delete("menus")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Save 保存记录
+func (m *Menus) Save() error {
+	err := m.save(m)
 	if err != nil {
 		return err
 	}
