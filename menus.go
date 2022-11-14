@@ -16,6 +16,8 @@ type MenuBase struct {
 	IncomeId string `json:"income_id"`
 	// 出品部门
 	DepartmentId string `json:"department_id"`
+	// 品牌
+	BrandId string `json:"brand_id"`
 }
 
 // MenuSpecification 规格
