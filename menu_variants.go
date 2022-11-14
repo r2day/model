@@ -5,7 +5,7 @@ type MenuVariants struct {
 	BaseModel
 
 	// 对外提供列表
-	MenuSpecification `json:"basket"`
+	MenuSpecification
 	// CreatedAt 创建人
 	CreatedBy string `json:"created_by"`
 	// UpdatedAt 修改人
