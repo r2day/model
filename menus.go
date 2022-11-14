@@ -101,7 +101,7 @@ type Menus struct {
 	//// 存储序列化后的数据
 	//Baskets string `json:"-"`
 	//// 对外提供列表
-	//Basket []MenuSpecification `json:"basket" gorm:"-"`
+	Basket []MenuSpecification `json:"basket" gorm:"-"`
 	// CreatedAt 创建人
 	CreatedBy string `json:"created_by"`
 	// UpdatedAt 修改人
