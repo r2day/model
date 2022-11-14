@@ -8,14 +8,14 @@ type MenuBase struct {
 	MenuId string `json:"menu_id"`
 
 	// POS 分类
-	PosCategory string `json:"pos_category"`
+	PosCategoryId string `json:"pos_category_id"`
 	// 线上 分类
-	OnlineCategory string `json:"online_category"`
+	OnlineCategoryId string `json:"online_category_id"`
 
 	// 收入科目
-	IncomeAccount string `json:"income_account"`
+	IncomeId string `json:"income_id"`
 	// 出品部门
-	ProductionDepartment string `json:"production_department"`
+	DepartmentId string `json:"department_id"`
 }
 
 // MenuSpecification 规格
