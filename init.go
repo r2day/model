@@ -58,6 +58,7 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 		DataHandler.AutoMigrate(&Menus{})
 		DataHandler.AutoMigrate(&MenuVariants{})
 		DataHandler.AutoMigrate(&MenuTaste{})
+		DataHandler.AutoMigrate(&Images{})
 
 		// 门店相关
 		DataHandler.AutoMigrate(&Brands{})
