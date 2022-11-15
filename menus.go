@@ -109,11 +109,13 @@ type Menus struct {
 	MenuBase
 	// 菜品销售信息
 	MenuSales
-	//// 存储序列化后的数据
-	//Baskets string `json:"-"`
-	//// 对外提供列表
+	// 图片信息
+	ImageBasket []ImageBase `json:"image_basket" gorm:"-"`
+
+	// 对外提供列表
 	Basket []MenuSpecification `json:"basket" gorm:"-"`
 
+	// 口味
 	TasteBasket []MenuTasteEnable `json:"taste_basket" gorm:"-"`
 
 	// CreatedAt 创建人
