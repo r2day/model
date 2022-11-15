@@ -79,6 +79,13 @@ type MenuEnable struct {
 	IsSaleAlone bool `json:"is_sale_alone"`
 }
 
+type MenuTasteEnable struct {
+	// 口味是否推荐
+	IsTasteRecommend bool `json:"is_taste_recommend"`
+	// 口味是否为默认 (例如: 微辣)
+	IsTasteDefault bool `json:"is_taste_default"`
+}
+
 // MenuSales 售卖属性
 type MenuSales struct {
 	MenuSupport
@@ -104,6 +111,9 @@ type Menus struct {
 	//Baskets string `json:"-"`
 	//// 对外提供列表
 	Basket []MenuSpecification `json:"basket" gorm:"-"`
+
+	TasteBasket []MenuTasteEnable `json:"taste_basket" gorm:"-"`
+
 	// CreatedAt 创建人
 	CreatedBy string `json:"created_by"`
 	// UpdatedAt 修改人
