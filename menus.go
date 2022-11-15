@@ -80,6 +80,8 @@ type MenuEnable struct {
 }
 
 type MenuTasteEnable struct {
+	// Name 口味名称
+	Name string `json:"name"`
 	// 口味是否推荐
 	IsTasteRecommend bool `json:"is_taste_recommend"`
 	// 口味是否为默认 (例如: 微辣)
