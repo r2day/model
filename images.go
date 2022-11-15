@@ -8,7 +8,7 @@ type ImageBase struct {
 	// Type 图片类型
 	Type string `json:"type" gorm:"default:avtar" gorm:"index:idx_type"`
 	// Url 图片地址
-	Url uint `json:"url"`
+	Url string `json:"url"`
 }
 
 // Images 图片
