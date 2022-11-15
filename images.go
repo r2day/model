@@ -1,8 +1,12 @@
 package model
 
 type ImageBase struct {
-	// ImageId 图片id
-	ImageId string `json:"image_id"  gorm:"index:idx_image_id"`
+	// Name 金融名称
+	Name string `json:"name"`
+	// Size 图片大小
+	Size uint `json:"size"`
+	// Type 图片类型
+	Type string `json:"type" gorm:"default:avtar" gorm:"index:idx_type"`
 	// Url 图片地址
 	Url uint `json:"url"`
 }
@@ -17,12 +21,9 @@ type Images struct {
 	CreatedBy string `json:"created_by"`
 	// UpdatedAt 修改人
 	UpdatedBy string `json:"updated_by"`
-	// Name 金融名称
-	Name string `json:"name"`
-	// Type 图片类型
-	Type string `json:"type" gorm:"default:avtar" gorm:"index:idx_type"`
-	// Size 图片大小
-	Size uint `json:"size"`
+
+	// MenuId 菜品id
+	MenuId string `json:"menu_id"  gorm:"index:idx_menu_id"`
 }
 
 // ListByOffset 获取所有数据
