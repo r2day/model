@@ -37,15 +37,15 @@ type VipCard struct {
 
 func (m VipCard) MarshalJSON() ([]byte, error) {
 	// 命名别名，避免MarshalJson死循环
-	type AliasCustomer Customers
+	type AliasVipCard VipCard
 	if m.Segments != "" {
 		m.Groups = strings.Split(m.Segments, ",")
 	} else {
 		m.Groups = make([]string, 0)
 	}
 	return json.Marshal(struct {
-		AliasCustomer
-	}{AliasCustomer(m)})
+		AliasVipCard
+	}{AliasVipCard(m)})
 }
 
 // SaveALine 保存实例
