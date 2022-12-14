@@ -1,82 +1,49 @@
 package model
 
 import (
-	"encoding/json"
 	"strconv"
-	"strings"
 )
 
 // Customers 客户账号信息
 type Customers struct {
 	BaseModel
 
-	// CardId 卡号
-	CardId string `json:"card_id" gorm:"index:idx_card_id,unique"`
 	// CustomerId 客户编号
 	CustomerId string `json:"customer_id"`
-	// 手机号
-	Phone string `json:"phone" gorm:"index:idx_phone"`
 	// 姓名
 	Name string `json:"name"`
 	// 性别
 	Gender string `json:"gender"`
+	// 手机号
+	Phone string `json:"phone" gorm:"index:idx_phone"`
+	// 会有卡(正常)
+	VipCard uint64 `json:"vip_card"`
+	// 优惠券
+	Tickets uint64 `json:"tickets"`
+	// 来源
+	From string `json:"from"`
+	// 注册时间
+	RegisterDate string `json:"register_date"`
+	// 生日类型 阳历/阴历
+	BirthType string `json:"birth_type"`
 	// 出生日期
 	BirthDay string `json:"birth_day"`
-	// 资产
-	Assets
-
-	// 卡信息
-	Cards
-	// Avatar 头像基本地址
-	// 例如: https://avatar.r2day.club/<customer_id>/64x64
-	Avatar string `json:"avatar"`
-	// Segments 分类标签 逗号分隔的数据
-	Segments string   `json:"-"`
-	Groups   []string `json:"groups" gorm:"-"`
-}
-
-func (m Customers) MarshalJSON() ([]byte, error) {
-	// 命名别名，避免MarshalJson死循环
-	type AliasCustomer Customers
-	if m.Segments != "" {
-		m.Groups = strings.Split(m.Segments, ",")
-	} else {
-		m.Groups = make([]string, 0)
-	}
-	return json.Marshal(struct {
-		AliasCustomer
-	}{AliasCustomer(m)})
 }
 
 // SaveALine 保存实例
 func (m Customers) SaveALine(value []string) {
 
-	m.CardId = value[0]
+	// m.IndexId = value[0]
 	m.CustomerId = value[1]
-	m.Phone = value[2]
-	m.Name = value[3]
-	m.Gender = value[4]
-	m.BirthDay = value[5]
-	m.CardType = value[6]
-	m.CardStatus = value[7]
-	m.CardLevel = value[8]
-	m.CardFrom = value[9]
-	m.Balance, _ = strconv.ParseFloat(value[10], 64)
-	m.CashCharge, _ = strconv.ParseFloat(value[11], 64)
-	m.Freezing, _ = strconv.ParseFloat(value[12], 64)
-	m.Gift, _ = strconv.ParseFloat(value[13], 64)
-	m.Integral, _ = strconv.ParseUint(value[14], 10, 64)
-	m.TotalBalance, _ = strconv.ParseFloat(value[15], 64)
-	m.TotalBalanceCounter, _ = strconv.ParseUint(value[16], 10, 64)
-
-	m.TotalCumulativeConsumption, _ = strconv.ParseFloat(value[17], 64)
-	m.TotalCumulativeConsumptionCounter, _ = strconv.ParseUint(value[18], 10, 64)
-	m.DebitTotalLimit, _ = strconv.ParseFloat(value[19], 64)
-	m.DebitLeftLimit, _ = strconv.ParseFloat(value[20], 64)
-	m.DebitUsedLimit, _ = strconv.ParseFloat(value[21], 64)
-	m.EntityCardId = value[22]
-	m.CardCreatedDate = value[23]
-	m.Expire = value[24]
+	m.Name = value[2]
+	m.Gender = value[3]
+	m.Phone = value[4]
+	m.VipCard, _ = strconv.ParseUint(value[5], 10, 64)
+	m.Tickets, _ = strconv.ParseUint(value[6], 10, 64)
+	m.From = value[7]
+	m.RegisterDate = value[8]
+	m.BirthType = value[9]
+	m.BirthDay = value[10]
 
 	DataHandler.Create(&m)
 }

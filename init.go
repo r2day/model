@@ -47,6 +47,7 @@ func InitDataBase(dsn string, p logger.Interface, debug bool) error {
 		// 客户相关
 		DataHandler.AutoMigrate(&CustomerGroups{})
 		DataHandler.AutoMigrate(&Customers{})
+		DataHandler.AutoMigrate(&VipCard{})
 
 		// 订单相关
 		DataHandler.AutoMigrate(&Commands{})
