@@ -5,11 +5,11 @@ type Reviews struct {
 	BaseModel
 
 	// 门店id
-	StoreId uint `json:"store_id"`
+	StoreId string `json:"store_id"`
 	// 产品id
-	ProductId uint `json:"product_id"`
+	ProductId string `json:"product_id"`
 	// 客户id
-	CustomerId uint `json:"customer_id"`
+	CustomerId string `json:"customer_id"`
 	// 星级
 	Rating uint `json:"rating"`
 	// 用户评论
