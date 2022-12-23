@@ -34,7 +34,6 @@ func (m BaseModel) save(instance interface{}) error {
 	if err != nil {
 		return err
 	}
-	handler.
 	return nil
 }
 
