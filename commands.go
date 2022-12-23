@@ -32,7 +32,7 @@ type Product struct {
 // Commands 订单信息
 /*
 INSERT INTO commands(merchant_id,customer_id,reference,total_ex_taxes,delivery_fees,tax_rate,taxes,total,baskets,status,returned)
- VALUE("M1586394958510690304", 2, 2, 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":3,\"quantity\":12,\"unit_price\":3.2}]", "delivered", 0);
+ VALUE("demo", 2, 2, 0.1, 0.2, 0.1, 1.2, 2.0, "[{\"product_id\":1,\"quantity\":1,\"unit_price\":1.2},{\"product_id\":3,\"quantity\":12,\"unit_price\":3.2}]", "pending", 0);
 */
 
 type Commands struct {
@@ -43,6 +43,9 @@ type Commands struct {
 
 	// Reference 订单
 	Reference string `json:"reference"`
+
+	// AddressId 客户地址id
+	AddressId string `json:"address_id"`
 
 	// 基本费用
 	BaseFee
