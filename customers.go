@@ -30,6 +30,16 @@ type Customers struct {
 	BirthDay string `json:"birth_day"`
 }
 
+// Save 保存
+func (m *Customers) Save() error {
+	err := m.save(m)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
 // SaveALine 保存实例
 func (m Customers) SaveALine(value []string) {
 
